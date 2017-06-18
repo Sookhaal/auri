@@ -1,3 +1,5 @@
+import os
+import glob
 from PySide2 import QtWidgets
 
 
@@ -19,6 +21,23 @@ def get_application():
             except ImportError:
                 host_application = "standalone"
     return host_application
+
+
+def get_scripts_directory():
+    return os.path.abspath("./scripts/")
+
+
+def get_categories():
+    categories = [cat for cat in os.listdir(get_scripts_directory()) if os.path.isdir(os.path.join(get_scripts_directory(), cat))]
+    return categories
+
+
+def get_scripts(category=None):
+    if category is None:
+        return ""
+    # scripts = glob.glob(os.path.join(get_scripts_directory(), category, "*.py"))
+    scripts = next(os.walk(os.path.join(get_scripts_directory(), category)))[2]
+    return scripts
 
 
 def push_button(text, signal=None):
