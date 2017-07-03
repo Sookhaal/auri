@@ -3,7 +3,7 @@ Auri is a rigging tool for Maya.
 The main idea is to build a library of scripts (rigging modules) and have a shell (Auri) executing the selected scripts in an order the user specificed (top to bottom).
 
 * How it works
-The `scripts` folder contains *categories* (subfolders) which contain *modules* (python scripts).
+The =scripts= folder contains *categories* (subfolders) which contain *modules* (python scripts).
 Auri lets you select a category and a corresponding script and *add* it to the list of scripts to execute.
 
 A module can have a custom UI (view) and some logic associated to it.
