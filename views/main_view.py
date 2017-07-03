@@ -35,6 +35,7 @@ class MainView(QtWidgets.QWidget):
     def setup_ui(self):
         self.setup_parts_ui()
         self.setup_properties_ui()
+        self.setup_build_area()
         self.setLayout(self.main_layout)
 
     def setup_parts_ui(self):
@@ -83,3 +84,15 @@ class MainView(QtWidgets.QWidget):
         properties_layout.addWidget(create_scroll_area())
 
         self.main_layout.addWidget(properties_grp)
+
+    def setup_build_area(self):
+        def create_execute_all_btn():
+            execute_all_btn = push_button("Execute All", self.main_ctrl.execute_all)
+            return execute_all_btn
+
+        build_layout = QtWidgets.QHBoxLayout()
+        build_grp = grpbox("Build", build_layout)
+
+        build_layout.addWidget(create_execute_all_btn())
+        self.main_layout.addWidget(build_grp)
+        pass

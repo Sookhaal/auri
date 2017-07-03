@@ -91,3 +91,7 @@ class AuriScriptView(QtWidgets.QWidget):
 class AuriScriptViewModel:
     def __init__(self):
         pass
+
+    @abc.abstractmethod
+    def execute(self):
+        pass

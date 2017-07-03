@@ -21,5 +21,8 @@ class View(AuriScriptView):
 
 
 class ViewModel(AuriScriptViewModel):
+    def execute(self):
+        print __name__
+
     def __init__(self):
         AuriScriptViewModel.__init__(self)

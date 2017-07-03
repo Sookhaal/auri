@@ -25,6 +25,7 @@ class MainModel(object):
         self.selected_category = None
         self.selected_script = None
         self.current_part = None
+        self.scripts_to_execute = []
 
     def add_btn_disabled(self):
         if len(self.selected_category) > 0 and len(self.selected_script) > 0:
