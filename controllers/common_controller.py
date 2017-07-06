@@ -10,7 +10,7 @@ class CommonController(object):
         """
         self.main_model = main_model
         self.category_combobox = None
-        self.script_combobox = None
+        self.script_selector = None
         self.refresh()
 
     def new_rig(self):

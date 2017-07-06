@@ -1,4 +1,4 @@
-from auri.autorig_lib import push_button, AuriScriptView, AuriScriptViewModel
+from auri.autorig_lib import push_button, AuriScriptView, AuriScriptController
 from PySide2 import QtGui, QtWidgets
 
 
@@ -16,13 +16,13 @@ class View(AuriScriptView):
 
         self.setLayout(main_layout)
 
-    def set_viewmodel(self):
-        self.viewmodel = ViewModel()
+    def set_controller(self):
+        self.ctrl = Controller()
 
 
-class ViewModel(AuriScriptViewModel):
+class Controller(AuriScriptController):
     def execute(self):
         print __name__
 
     def __init__(self):
-        AuriScriptViewModel.__init__(self)
+        AuriScriptController.__init__(self)

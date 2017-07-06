@@ -72,15 +72,23 @@ def load_rig_file(rig_file_path):
     return {}
 
 
+def get_resources_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources")
+
+
+def get_auri_icon(icon_name):
+    return os.path.join(get_resources_path(), "icons", icon_name)
+
+
 class AuriScriptView(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super(AuriScriptView, self).__init__(*args, **kwargs)
-        self.viewmodel = None
-        self.set_viewmodel()
+        self.ctrl = None
+        self.set_controller()
         self.setup_ui()
 
     @abc.abstractmethod
-    def set_viewmodel(self):
+    def set_controller(self):
         pass
 
     @abc.abstractmethod
@@ -88,7 +96,7 @@ class AuriScriptView(QtWidgets.QWidget):
         pass
 
 
-class AuriScriptViewModel:
+class AuriScriptController:
     def __init__(self):
         pass
 

@@ -30,7 +30,7 @@ class MainView(QtWidgets.QWidget):
     def open_script_selector(self):
         result = self.script_selector_dialog.exec_()
         if result == 1:
-            self.add_btn.setDisabled(self.model.add_btn_disabled())
+            self.add_btn.setDisabled(self.model.add_btn_disabled)
 
     def setup_ui(self):
         self.setup_parts_ui()
@@ -42,6 +42,7 @@ class MainView(QtWidgets.QWidget):
         def create_category_combobox():
             self.category_combobox.setModel(self.model.categories)
             self.category_combobox.currentTextChanged.connect(self.main_ctrl.category_changed)
+            self.category_combobox.currentTextChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
             self.model.selected_category = self.category_combobox.currentText()
             return self.category_combobox
 

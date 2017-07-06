@@ -10,8 +10,9 @@ class BootstrapView(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(BootstrapView, self).__init__(parent=parent)
         self.setWindowTitle("Auri")
-        self.setMinimumWidth(500)
+        self.setMinimumWidth(400)
         self.setMinimumHeight(300)
+        self.resize(500, 500)
         self.statusBar()
 
         self.main_model = MainModel()
