@@ -1,7 +1,5 @@
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QStyle
-from auri.autorig_lib import grpbox, push_button, get_auri_icon
+from auri.autorig_lib import grpbox, get_auri_icon
 
 
 class MainController(object):
@@ -21,6 +19,10 @@ class MainController(object):
             self.model.selected_category = new_category
             self.model.selected_script = None
 
+    def name_changed(self, new_name):
+        self.model.module_name = new_name.replace(" ", "_")
+        print self.model.module_name
+
     def setup(self, category_combobox, script_selector):
         self.common_ctrl.category_combobox = category_combobox
         self.common_ctrl.script_selector = script_selector
@@ -36,7 +38,7 @@ class MainController(object):
 
         # Create the shell to hold the view
         script_layout = QtWidgets.QGridLayout()
-        grp_title = "{0}:{1}:{2}".format(self.model.selected_category, self.model.selected_script, self.model.module_name)
+        grp_title = "{0} - {1} - {2}".format(self.model.selected_category, self.model.selected_script, self.model.module_name)
         script_grp = grpbox(grp_title, script_layout)
 
         # Create the basic buttons

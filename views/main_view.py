@@ -20,7 +20,6 @@ class MainView(QtWidgets.QWidget):
         self.scrollable_layout = QtWidgets.QVBoxLayout()
         self.category_combobox = QtWidgets.QComboBox()
         self.script_selector_dialog = ScriptSelectorView(self.model.scripts, self.model)
-        # self.script_selector = QtWidgets.QComboBox()
         self.script_selector = push_button("Scripts", self.open_script_selector)
         self.add_btn = push_button("Add", partial(self.main_ctrl.add_script, self))
 
@@ -51,7 +50,17 @@ class MainView(QtWidgets.QWidget):
 
         def create_name_textbox():
             name_textbox = QtWidgets.QLineEdit()
+
+            # Replace spaces with underscores
+            def name_fixup():
+                name_textbox.setText(name_textbox.text().replace(" ", "_"))
+
             name_textbox.setPlaceholderText("Name")
+            name_validator = QtGui.QRegExpValidator(QtCore.QRegExp("^[a-zA-Z][a-zA-Z\d#_ ]*"))
+            name_textbox.setValidator(name_validator)
+            name_textbox.textChanged.connect(name_fixup)
+            name_textbox.textChanged.connect(self.main_ctrl.name_changed)
+            name_textbox.textChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
             return name_textbox
 
         def create_add_btn():
