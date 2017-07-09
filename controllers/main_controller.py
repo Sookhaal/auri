@@ -21,7 +21,6 @@ class MainController(object):
 
     def name_changed(self, new_name):
         self.model.module_name = new_name.replace(" ", "_")
-        print self.model.module_name
 
     def setup(self, category_combobox, script_selector):
         self.common_ctrl.category_combobox = category_combobox

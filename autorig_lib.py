@@ -84,8 +84,14 @@ class AuriScriptView(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super(AuriScriptView, self).__init__(*args, **kwargs)
         self.ctrl = None
+        self.model = None
+        self.set_model()
         self.set_controller()
         self.setup_ui()
+
+    @abc.abstractmethod
+    def set_model(self):
+        pass
 
     @abc.abstractmethod
     def set_controller(self):
@@ -102,4 +108,9 @@ class AuriScriptController:
 
     @abc.abstractmethod
     def execute(self):
+        pass
+
+
+class AuriScriptModel:
+    def __init__(self):
         pass
