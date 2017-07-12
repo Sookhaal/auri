@@ -2,6 +2,7 @@ from PySide2 import QtWidgets
 from auri.controllers.common_controller import CommonController
 from auri.controllers.main_controller import MainController
 from auri.models.main_model import MainModel
+from auri.models.project_model import ProjectModel
 from auri.views.main_view import MainView
 from auri.views.menubar_view import MenuBarView
 
@@ -16,11 +17,12 @@ class BootstrapView(QtWidgets.QMainWindow):
         self.statusBar()
 
         self.main_model = MainModel()
-        self.common_ctrl = CommonController(self.main_model)
+        self.project_model = ProjectModel()
+        self.common_ctrl = CommonController(self.main_model, self)
 
         self.setMenuBar(MenuBarView(self.common_ctrl))
 
-        self.main_ctrl = MainController(self.main_model, self.common_ctrl)
+        self.main_ctrl = MainController(self.main_model, self.project_model, self.common_ctrl)
         self.setCentralWidget(MainView(self.main_model, self.main_ctrl))
 
         self.show()

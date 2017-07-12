@@ -5,24 +5,25 @@ from auri.auri_lib import grpbox, get_auri_icon
 
 
 class MainController(object):
-    def __init__(self, main_model, common_ctrl):
+    def __init__(self, main_model, project_model, common_ctrl):
         """
 
         Args:
             common_ctrl (auri.controllers.common_controller.CommonController):
             main_model (auri.models.main_model.MainModel):
         """
-        self.model = main_model
+        self.main_model = main_model
+        self.project_model = project_model
         self.common_ctrl = common_ctrl
 
     def category_changed(self, new_category):
         if len(new_category) > 0:
             self.common_ctrl.refresh_scripts(new_category)
-            self.model.selected_category = new_category
-            self.model.selected_script = None
+            self.main_model.selected_category = new_category
+            self.main_model.selected_script = None
 
     def name_changed(self, new_name):
-        self.model.module_name = new_name.replace(" ", "_")
+        self.main_model.module_name = new_name.replace(" ", "_")
 
     def setup(self, category_combobox, script_selector):
         self.common_ctrl.category_combobox = category_combobox
@@ -35,11 +36,11 @@ class MainController(object):
             main_view (auri.views.main_view.MainView):
         """
         # Create the script module view & controller
-        exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(self.model.selected_category, self.model.selected_script)
+        exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(self.main_model.selected_category, self.main_model.selected_script)
 
         # Create the shell to hold the view
         script_layout = QtWidgets.QGridLayout()
-        grp_title = "{0} - {1} - {2}".format(self.model.selected_category, self.model.selected_script, self.model.module_name)
+        grp_title = "{0} - {1} - {2}".format(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name)
         script_grp = grpbox(grp_title, script_layout)
 
         # Create the basic buttons
@@ -86,15 +87,13 @@ class MainController(object):
         script_layout.addWidget(the_view, 1, 0)
         main_view.scrollable_layout.addWidget(script_grp)
         # noinspection PyUnresolvedReferences
-        self.model.scripts_to_execute.append(the_ctrl)
+        self.project_model.scripts_to_execute.append(the_ctrl)
 
     def remove_script(self, main_view, script_grp, script_ctrl):
-        self.model.scripts_to_execute.remove(script_ctrl)
+        self.project_model.scripts_to_execute.remove(script_ctrl)
         main_view.scrollable_layout.removeWidget(script_grp)
         script_grp.deleteLater()
 
     def execute_all(self):
-        print "\n\nAuri will run:"
-        for script in self.model.scripts_to_execute:
-            script.reload()
+        for script in self.project_model.scripts_to_execute:
             script.execute()

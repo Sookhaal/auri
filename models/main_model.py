@@ -9,7 +9,6 @@ class MainModel(object):
         self.selected_category = None
         self.selected_script = None
         self.current_part = None
-        self.scripts_to_execute = []
         self.current_project = None
 
     @property

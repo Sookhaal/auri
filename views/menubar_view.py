@@ -54,5 +54,5 @@ class MenuBarView(QtWidgets.QMenuBar):
         action = QtWidgets.QAction("&Refresh", self)
         action.triggered.connect(self.common_ctrl.refresh)
         action.setShortcut("Ctrl+R")
-        action.setStatusTip("Refresh category & script comboboxes")
+        action.setStatusTip("Refresh categories & scripts")
         return action
