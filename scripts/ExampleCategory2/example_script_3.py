@@ -1,4 +1,4 @@
-from auri.autorig_lib import push_button, AuriScriptView, AuriScriptController
+from auri.auri_lib import push_button, AuriScriptView, AuriScriptController
 from PySide2 import QtGui, QtWidgets
 
 

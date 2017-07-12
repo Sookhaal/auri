@@ -1,4 +1,4 @@
-from auri.autorig_lib import push_button, AuriScriptView, AuriScriptController, AuriScriptModel
+from auri.auri_lib import push_button, AuriScriptView, AuriScriptController, AuriScriptModel
 from PySide2 import QtGui, QtWidgets
 
 
@@ -42,7 +42,6 @@ class Controller(AuriScriptController):
     def on_chk_a_changed(self, state):
         switch = {0: False, 2: True}
         self.model.chk_a = switch.get(state)
-        print self.model.chk_a
 
     def on_txt_a_changed(self, txt):
         self.model.txt_a = txt

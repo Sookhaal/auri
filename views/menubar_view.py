@@ -12,42 +12,42 @@ class MenuBarView(QtWidgets.QMenuBar):
         super(MenuBarView, self).__init__()
 
         file_menu = self.addMenu("&File")
-        file_menu.addAction(self.new_rig_action())
-        file_menu.addAction(self.open_rig_action())
-        file_menu.addAction(self.save_rig_action())
-        file_menu.addAction(self.save_rig_as_action())
+        file_menu.addAction(self.new_project_action())
+        file_menu.addAction(self.open_project_action())
+        file_menu.addAction(self.save_project_action())
+        file_menu.addAction(self.save_project_as_action())
 
         edit_menu = self.addMenu("&Edit")
         edit_menu.addAction(self.refresh_action())
 
         # about_menu = self.addMenu("&About")
 
-    def new_rig_action(self):
-        action = QtWidgets.QAction("&New Rig", self)
-        action.triggered.connect(self.common_ctrl.new_rig)
+    def new_project_action(self):
+        action = QtWidgets.QAction("&New Project", self)
+        action.triggered.connect(self.common_ctrl.new_project)
         action.setShortcut("Ctrl+N")
-        action.setStatusTip("Clear current rig")
+        action.setStatusTip("Clear current project")
         return action
 
-    def open_rig_action(self):
-        action = QtWidgets.QAction("&Open Rig", self)
-        action.triggered.connect(self.common_ctrl.open_rig)
+    def open_project_action(self):
+        action = QtWidgets.QAction("&Open Project", self)
+        action.triggered.connect(self.common_ctrl.open_project)
         action.setShortcut("Ctrl+O")
-        action.setStatusTip("Open a rig")
+        action.setStatusTip("Open a project")
         return action
 
-    def save_rig_action(self):
-        action = QtWidgets.QAction("&Save Rig", self)
-        action.triggered.connect(self.common_ctrl.save_rig)
+    def save_project_action(self):
+        action = QtWidgets.QAction("&Save Project", self)
+        action.triggered.connect(self.common_ctrl.save_project)
         action.setShortcut("Ctrl+S")
-        action.setStatusTip("Save current rig")
+        action.setStatusTip("Save current project")
         return action
 
-    def save_rig_as_action(self):
-        action = QtWidgets.QAction("Save Rig &As", self)
-        action.triggered.connect(self.common_ctrl.save_rig_as)
+    def save_project_as_action(self):
+        action = QtWidgets.QAction("Save Project &As", self)
+        action.triggered.connect(self.common_ctrl.save_project_as)
         action.setShortcut("Ctrl+Shift+S")
-        action.setStatusTip("Save current rig as")
+        action.setStatusTip("Save current project as")
         return action
 
     def refresh_action(self):

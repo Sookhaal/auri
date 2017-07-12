@@ -1,7 +1,7 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 from functools import partial
 
-from auri.autorig_lib import grpbox, get_auri_icon
+from auri.auri_lib import grpbox, get_auri_icon
 
 
 class MainController(object):
@@ -73,6 +73,7 @@ class MainController(object):
         delete_btn.setIcon(delete_icon)
         delete_btn.setIconSize(btns_size)
         delete_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+        # noinspection PyUnresolvedReferences
         delete_btn.pressed.connect(partial(self.remove_script, main_view, script_grp, the_ctrl))
         # Add the buttons
         btns_layout.addWidget(up_btn)
@@ -95,4 +96,5 @@ class MainController(object):
     def execute_all(self):
         print "\n\nAuri will run:"
         for script in self.model.scripts_to_execute:
+            script.reload()
             script.execute()

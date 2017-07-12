@@ -1,4 +1,6 @@
-from auri.autorig_lib import get_categories, get_scripts
+from PySide2 import QtWidgets, QtCore
+
+from auri.auri_lib import get_categories, get_scripts
 
 
 class CommonController(object):
@@ -13,17 +15,25 @@ class CommonController(object):
         self.script_selector = None
         self.refresh()
 
-    def new_rig(self):
+    def new_project(self):
         pass
 
-    def open_rig(self):
+    def open_project(self):
         pass
 
-    def save_rig(self):
+    def save_project(self):
         pass
 
-    def save_rig_as(self):
-        pass
+    def save_project_as(self):
+        dialog = QtWidgets.QFileDialog()
+        dialog.setFilter(dialog.filter() | QtCore.QDir.Hidden)
+        dialog.setDefaultSuffix("json")
+        dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        dialog.setNameFilters(["JSON (*.json)"])
+        if dialog.exec_() == QtWidgets.QDialog.Accepted:
+            file(dialog.selectedFiles()[0], "w").close()
+        else:
+            print("Cancelled")
 
     def refresh(self):
         self.refresh_categories()

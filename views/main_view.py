@@ -1,7 +1,7 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 from functools import partial
 
-from auri.autorig_lib import push_button, grpbox
+from auri.auri_lib import push_button, grpbox
 from auri.views.script_selector_view import ScriptSelectorView
 
 

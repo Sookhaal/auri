@@ -1,4 +1,4 @@
-from auri.autorig_lib import get_application
+from auri.auri_lib import get_application
 from auri.views.bootstrap_view import BootstrapView
 from Qt import QtWidgets
 import sys

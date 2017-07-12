@@ -2,6 +2,16 @@ from PySide2 import QtGui, QtCore, QtWidgets
 
 
 class MainModel(object):
+    def __init__(self):
+        self.categories_model = QtGui.QStringListModel()
+        self.scripts_model = QtGui.QStringListModel()
+        self.module_name = None
+        self.selected_category = None
+        self.selected_script = None
+        self.current_part = None
+        self.scripts_to_execute = []
+        self.current_project = None
+
     @property
     def categories(self):
         return self.categories_model
@@ -17,15 +27,6 @@ class MainModel(object):
     @scripts.setter
     def scripts(self, value):
         self.scripts_model.setStringList(value)
-
-    def __init__(self):
-        self.categories_model = QtGui.QStringListModel()
-        self.scripts_model = QtGui.QStringListModel()
-        self.module_name = None
-        self.selected_category = None
-        self.selected_script = None
-        self.current_part = None
-        self.scripts_to_execute = []
 
     @property
     def add_btn_disabled(self):
