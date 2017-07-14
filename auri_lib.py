@@ -1,13 +1,10 @@
-import json
+import abc
 import os
-import glob
 import re
 from PySide2 import QtWidgets
-import abc
 
 
 def get_application():
-    host_application = ""
     try:
         import maya.OpenMayaUI as mui
         import maya.cmds as cmds
@@ -58,18 +55,6 @@ def grpbox(title, lyt=None):
     g = QtWidgets.QGroupBox(title=title)
     g.setLayout(lyt)
     return g
-
-
-def try_create_rig_file(rig_file_path):
-    if not os.path.isfile(rig_file_path):
-        file(rig_file_path, "w").close()
-
-
-def load_rig_file(rig_file_path):
-    if os.stat(rig_file_path).st_size > 0:
-        with open(rig_file_path) as json_file:
-            return json.load(json_file)
-    return {}
 
 
 def get_resources_path():
