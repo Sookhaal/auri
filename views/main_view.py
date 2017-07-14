@@ -21,7 +21,7 @@ class MainView(QtWidgets.QWidget):
         self.category_combobox = QtWidgets.QComboBox()
         self.script_selector_dialog = ScriptSelectorView(self.model.scripts, self.model)
         self.script_selector = push_button("Scripts", self.open_script_selector)
-        self.add_btn = push_button("Add", partial(self.main_ctrl.add_script, self))
+        self.add_btn = push_button("Add", partial(self.main_ctrl.add_selected_script, self))
 
         self.main_ctrl.setup(self.category_combobox, self.script_selector)
         self.setup_ui()

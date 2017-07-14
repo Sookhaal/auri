@@ -2,6 +2,7 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from functools import partial
 
 from auri.auri_lib import grpbox, get_auri_icon
+from auri.views.script_module_view import ScriptModuleView
 
 
 class MainController(object):
@@ -29,68 +30,25 @@ class MainController(object):
         self.common_ctrl.category_combobox = category_combobox
         self.common_ctrl.script_selector = script_selector
 
-    def add_script(self, main_view):
+    def add_script(self, category, script, module_name, main_view, script_module_instance=None):
+        if script_module_instance is not None:
+            script_view = ScriptModuleView(category, script, module_name, self.project_model, script_module_instance.get_index() + 1)
+            main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
+        else:
+            script_view = ScriptModuleView(category, script, module_name, self.project_model)
+            main_view.scrollable_layout.insertWidget(-1, script_view)
+        script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
+        script_view.delete_btn.pressed.connect(partial(self.remove_script, main_view, script_view))
+
+    def add_selected_script(self, main_view):
         """
 
         Args:
             main_view (auri.views.main_view.MainView):
         """
-        # Create the script module view & controller
-        exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(self.main_model.selected_category, self.main_model.selected_script)
+        self.add_script(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name, main_view)
 
-        # Create the shell to hold the view
-        script_layout = QtWidgets.QGridLayout()
-        grp_title = "{0} - {1} - {2}".format(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name)
-        script_grp = grpbox(grp_title, script_layout)
-
-        # Create the basic buttons
-        btns_layout = QtWidgets.QHBoxLayout()
-        btns_size = QtCore.QSize(24, 24)
-
-        up_btn = QtWidgets.QToolButton()
-        up_icon = QtGui.QIcon()
-        up_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Up.png")))
-        up_btn.setIcon(up_icon)
-        up_btn.setIconSize(btns_size)
-        up_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
-
-        down_btn = QtWidgets.QToolButton()
-        down_icon = QtGui.QIcon()
-        down_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Down.png")))
-        down_btn.setIcon(down_icon)
-        down_btn.setIconSize(btns_size)
-        down_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
-
-        duplicate_btn = QtWidgets.QToolButton()
-        duplicate_icon = QtGui.QIcon()
-        duplicate_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Duplicate.png")))
-        duplicate_btn.setIcon(duplicate_icon)
-        duplicate_btn.setIconSize(btns_size)
-        duplicate_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
-
-        delete_btn = QtWidgets.QToolButton()
-        delete_icon = QtGui.QIcon()
-        delete_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Delete.png")))
-        delete_btn.setIcon(delete_icon)
-        delete_btn.setIconSize(btns_size)
-        delete_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
-        # noinspection PyUnresolvedReferences
-        delete_btn.pressed.connect(partial(self.remove_script, main_view, script_grp, the_ctrl))
-        # Add the buttons
-        btns_layout.addWidget(up_btn)
-        btns_layout.addWidget(down_btn)
-        btns_layout.addWidget(duplicate_btn)
-        btns_layout.addWidget(delete_btn)
-        script_layout.addLayout(btns_layout, 0, 0)
-        # Add the view
-        # noinspection PyUnresolvedReferences
-        script_layout.addWidget(the_view, 1, 0)
-        main_view.scrollable_layout.addWidget(script_grp)
-        # noinspection PyUnresolvedReferences
-        self.project_model.scripts_to_execute.append(the_ctrl)
-
-    def remove_script(self, main_view, script_grp, script_ctrl):
-        self.project_model.scripts_to_execute.remove(script_ctrl)
+    def remove_script(self, main_view, script_grp):
         main_view.scrollable_layout.removeWidget(script_grp)
         script_grp.deleteLater()
 
