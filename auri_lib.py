@@ -19,7 +19,11 @@ def get_application():
                 import nukescripts
                 host_application = "nuke"
             except ImportError:
-                host_application = "standalone"
+                try:
+                    import MaxPlus
+                    host_application = "3dsmax"
+                except ImportError:
+                    host_application = "standalone"
     return host_application
 
 
