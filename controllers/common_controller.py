@@ -2,24 +2,37 @@ import os
 from PySide2 import QtWidgets, QtCore
 
 from auri.auri_lib import get_categories, get_scripts
+from auri.views.main_view import MainView
 
 
 class CommonController(object):
-    def __init__(self, main_model, bootstrap_view):
+    def __init__(self, main_model, project_model, bootstrap_view):
         """
 
         Args:
             main_model (auri.models.main_model.MainModel):
+            project_model (auri.models.project_model.ProjectModel):
             bootstrap_view (auri.views.bootstrap_view.BootstrapView):
         """
+        self.project_model = project_model
         self.main_model = main_model
         self.bootstrap_view = bootstrap_view
+        self.main_view = None
         self.category_combobox = None
         self.script_selector = None
         self.refresh()
 
     def new_project(self):
-        pass
+        if self.main_view is None:
+            self.main_view = self.bootstrap_view.main_view
+        assert(isinstance(self.main_view, MainView))
+        while self.main_view.scrollable_layout.count():
+            child = self.main_view.scrollable_layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        self.main_model.current_project = None
+        self.project_model.scripts_to_execute = []
 
     def open_project(self):
         pass
@@ -60,5 +73,3 @@ class CommonController(object):
     def refresh_scripts(self, category=None):
         scripts = get_scripts(category)
         self.main_model.scripts = scripts
-        # if self.script_combobox is not None:
-        #     self.script_combobox.setCurrentIndex(0)
