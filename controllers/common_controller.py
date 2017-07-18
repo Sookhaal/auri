@@ -24,6 +24,9 @@ class CommonController(object):
         self.script_selector = None
         self.refresh()
 
+    def set_window_title(self, title):
+        self.bootstrap_view.setWindowTitle(title)
+
     def new_project(self):
         assert(isinstance(self.main_view, MainView))
         while self.main_view.scrollable_layout.count():
@@ -33,6 +36,7 @@ class CommonController(object):
 
         self.main_model.current_project = None
         self.project_model.scripts_to_execute = []
+        self.set_window_title("Auri - New Project")
 
     def open_project(self):
         pass
@@ -42,14 +46,9 @@ class CommonController(object):
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
             assert isinstance(script_view, ScriptModuleView)
-            # self.project_model.scripts_in_order[script_view.get_index()] = {}
-            # self.project_model.scripts_in_order[script_view.get_index()]["Category"] = script_view.category
-            # self.project_model.scripts_in_order[script_view.get_index()]["Script"] = script_view.script
-            # self.project_model.scripts_in_order[script_view.get_index()]["Module Name"] = script_view.module_name
-            # self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
             self.project_model.scripts_in_order[script_view.get_index()] = {}
-            self.project_model.scripts_in_order[script_view.get_index()]["Category"] = script_view.category
-            self.project_model.scripts_in_order[script_view.get_index()]["Script"] = script_view.script
+            self.project_model.scripts_in_order[script_view.get_index()]["Module Category"] = script_view.category
+            self.project_model.scripts_in_order[script_view.get_index()]["Module Script"] = script_view.script
             self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
 
     def save_project(self):
@@ -60,6 +59,7 @@ class CommonController(object):
             project_file_path = os.path.abspath(self.main_model.current_project)
             with open(project_file_path, "w") as project_file:
                 json.dump(self.project_model.__dict__, project_file, sort_keys=True, indent=4, separators=(",", ": "))
+            self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
 
     def save_project_as(self):
         dialog = QtWidgets.QFileDialog()
@@ -70,7 +70,6 @@ class CommonController(object):
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             self.main_model.current_project = dialog.selectedFiles()[0]
             file(self.main_model.current_project, "w").close()
-            self.bootstrap_view.setWindowTitle("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
             self.save_project()
         else:
             # If the file does not exist, remove it from the title
