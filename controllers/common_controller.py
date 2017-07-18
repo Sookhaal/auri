@@ -39,7 +39,7 @@ class CommonController(object):
             script_view = ScriptModuleView(category, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(-1, script_view)
         script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
-        script_view.delete_btn.pressed.connect(partial(self.remove_script, main_view, script_view))
+        script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view))
         if model is not None:
             script_view.model.__dict__ = model
             script_view.the_view.refresh_view()
@@ -88,6 +88,7 @@ class CommonController(object):
 
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
+        self.main_model.scripts_to_execute = []
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
             assert isinstance(script_view, ScriptModuleView)
@@ -95,6 +96,7 @@ class CommonController(object):
             self.project_model.scripts_in_order[script_view.get_index()]["Module Category"] = script_view.category
             self.project_model.scripts_in_order[script_view.get_index()]["Module Script"] = script_view.script
             self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
+            self.main_model.scripts_to_execute.append(script_view.the_ctrl)
 
     def save_project(self):
         if self.main_model.current_project is None:

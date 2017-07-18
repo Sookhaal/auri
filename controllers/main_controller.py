@@ -37,5 +37,6 @@ class MainController(object):
         self.common_ctrl.add_script(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name, main_view)
 
     def execute_all(self):
+        self.common_ctrl.refresh_project_model()
         for script in self.main_model.scripts_to_execute:
             script.execute()
