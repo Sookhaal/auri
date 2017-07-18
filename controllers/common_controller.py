@@ -1,8 +1,10 @@
+import json
 import os
 from PySide2 import QtWidgets, QtCore
 
 from auri.auri_lib import get_categories, get_scripts
 from auri.views.main_view import MainView
+from auri.views.script_module_view import ScriptModuleView
 
 
 class CommonController(object):
@@ -23,8 +25,6 @@ class CommonController(object):
         self.refresh()
 
     def new_project(self):
-        if self.main_view is None:
-            self.main_view = self.bootstrap_view.main_view
         assert(isinstance(self.main_view, MainView))
         while self.main_view.scrollable_layout.count():
             child = self.main_view.scrollable_layout.takeAt(0)
@@ -37,11 +37,29 @@ class CommonController(object):
     def open_project(self):
         pass
 
+    def refresh_project_model(self):
+        self.project_model.scripts_in_order = {}
+        for widget_index in range(0, self.main_view.scrollable_layout.count()):
+            script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
+            assert isinstance(script_view, ScriptModuleView)
+            # self.project_model.scripts_in_order[script_view.get_index()] = {}
+            # self.project_model.scripts_in_order[script_view.get_index()]["Category"] = script_view.category
+            # self.project_model.scripts_in_order[script_view.get_index()]["Script"] = script_view.script
+            # self.project_model.scripts_in_order[script_view.get_index()]["Module Name"] = script_view.module_name
+            # self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
+            self.project_model.scripts_in_order[script_view.get_index()] = {}
+            self.project_model.scripts_in_order[script_view.get_index()]["Category"] = script_view.category
+            self.project_model.scripts_in_order[script_view.get_index()]["Script"] = script_view.script
+            self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
+
     def save_project(self):
         if self.main_model.current_project is None:
             self.save_project_as()
         else:
-            print "Save"
+            self.refresh_project_model()
+            project_file_path = os.path.abspath(self.main_model.current_project)
+            with open(project_file_path, "w") as project_file:
+                json.dump(self.project_model.__dict__, project_file, sort_keys=True, indent=4, separators=(",", ": "))
 
     def save_project_as(self):
         dialog = QtWidgets.QFileDialog()
@@ -53,6 +71,7 @@ class CommonController(object):
             self.main_model.current_project = dialog.selectedFiles()[0]
             file(self.main_model.current_project, "w").close()
             self.bootstrap_view.setWindowTitle("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
+            self.save_project()
         else:
             # If the file does not exist, remove it from the title
             if self.main_model.current_project is not None:

@@ -5,22 +5,26 @@ from auri.auri_lib import grpbox, get_auri_icon
 
 
 class ScriptModuleView(QtWidgets.QGroupBox):
-    def __init__(self, category, script, module_name, project_model, ctrl_index=-1):
+    def __init__(self, category, script, module_name, main_model, ctrl_index=-1):
         """
 
         Args:
-            project_model (auri.models.project_model.ProjectModel):
+            main_model (auri.models.main_model.MainModel):
             module_name (str):
             script (str):
             category (str):
         """
-        self.project_model = project_model
+        self.main_model = main_model
+        self.category = category
+        self.script = script
+        self.module_name = module_name
 
         super(ScriptModuleView, self).__init__()
         # Create the script module view & controller
         exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
         # noinspection PyUnresolvedReferences
-        the_ctrl.model.script_name = module_name
+        the_ctrl.model.module_name = module_name
+        self.model = the_ctrl.model
 
         grp_title = "{0} - {1} - {2}".format(category, script, module_name)
         self.setTitle(grp_title)
@@ -69,12 +73,12 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         # Add the view
         script_layout.addWidget(the_view, 1, 0)
         if ctrl_index < 0:
-            self.project_model.scripts_to_execute.append(the_ctrl)
+            self.main_model.scripts_to_execute.append(the_ctrl)
         else:
-            self.project_model.scripts_to_execute.insert(ctrl_index, the_ctrl)
+            self.main_model.scripts_to_execute.insert(ctrl_index, the_ctrl)
 
     def get_index(self):
         return self.parent().layout().indexOf(self)
 
     def remove_ctrl(self, the_ctrl):
-        self.project_model.scripts_to_execute.remove(the_ctrl)
+        self.main_model.scripts_to_execute.remove(the_ctrl)

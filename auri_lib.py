@@ -102,4 +102,4 @@ class AuriScriptController:
 
 class AuriScriptModel:
     def __init__(self):
-        self.script_name = None
+        self.module_name = None

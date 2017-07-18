@@ -25,5 +25,6 @@ class BootstrapView(QtWidgets.QMainWindow):
         self.setMenuBar(MenuBarView(self.common_ctrl))
 
         self.setCentralWidget(self.main_view)
+        self.common_ctrl.main_view = self.main_view
 
         self.show()

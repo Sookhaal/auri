@@ -10,6 +10,7 @@ class MainModel(object):
         self.selected_script = None
         self.current_part = None
         self.current_project = None
+        self.scripts_to_execute = []
 
     @property
     def categories(self):

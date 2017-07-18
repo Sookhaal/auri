@@ -1,3 +1,3 @@
 class ProjectModel(object):
     def __init__(self):
-        self.scripts_to_execute = []
+        self.scripts_in_order = {}
