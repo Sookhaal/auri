@@ -90,6 +90,10 @@ class AuriScriptView(QtWidgets.QWidget):
     def setup_ui(self):
         pass
 
+    @abc.abstractmethod
+    def refresh_view(self):
+        pass
+
 
 class AuriScriptController:
     def __init__(self):

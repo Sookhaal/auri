@@ -1,10 +1,5 @@
-from PySide2 import QtWidgets, QtCore, QtGui
 from functools import partial
-
-from auri.auri_lib import grpbox, get_auri_icon
 from auri.views.script_module_view import ScriptModuleView
-
-
 
 
 class MainController(object):
@@ -33,32 +28,13 @@ class MainController(object):
         self.common_ctrl.category_combobox = category_combobox
         self.common_ctrl.script_selector = script_selector
 
-    def add_script(self, category, script, module_name, main_view, script_module_instance=None):
-        if script_module_instance is not None:
-            script_view = ScriptModuleView(category, script, module_name, self.main_model, script_module_instance.get_index() + 1)
-            main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
-        else:
-            script_view = ScriptModuleView(category, script, module_name, self.main_model)
-            main_view.scrollable_layout.insertWidget(-1, script_view)
-        script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
-        script_view.delete_btn.pressed.connect(partial(self.remove_script, main_view, script_view))
-
     def add_selected_script(self, main_view):
         """
 
         Args:
             main_view (auri.views.main_view.MainView):
         """
-        self.add_script(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name, main_view)
-
-    def remove_script(self, main_view, script_view):
-        """
-
-        Args:
-            script_view (auri.views.script_module_view.ScriptModuleView):
-        """
-        main_view.scrollable_layout.removeWidget(script_view)
-        script_view.deleteLater()
+        self.common_ctrl.add_script(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name, main_view)
 
     def execute_all(self):
         for script in self.main_model.scripts_to_execute:

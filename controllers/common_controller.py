@@ -1,6 +1,8 @@
 import json
 import os
 from PySide2 import QtWidgets, QtCore
+from collections import OrderedDict
+from functools import partial
 
 from auri.auri_lib import get_categories, get_scripts
 from auri.views.main_view import MainView
@@ -16,6 +18,11 @@ class CommonController(object):
             project_model (auri.models.project_model.ProjectModel):
             bootstrap_view (auri.views.bootstrap_view.BootstrapView):
         """
+        self.dialog = QtWidgets.QFileDialog()
+        self.dialog.setFilter(self.dialog.filter() | QtCore.QDir.Hidden)
+        self.dialog.setDefaultSuffix("json")
+        self.dialog.setNameFilters(["JSON (*.json)"])
+
         self.project_model = project_model
         self.main_model = main_model
         self.bootstrap_view = bootstrap_view
@@ -24,11 +31,33 @@ class CommonController(object):
         self.script_selector = None
         self.refresh()
 
+    def add_script(self, category, script, module_name, main_view, script_module_instance=None, model=None):
+        if script_module_instance is not None:
+            script_view = ScriptModuleView(category, script, module_name, self.main_model, script_module_instance.get_index() + 1)
+            main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
+        else:
+            script_view = ScriptModuleView(category, script, module_name, self.main_model)
+            main_view.scrollable_layout.insertWidget(-1, script_view)
+        script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
+        script_view.delete_btn.pressed.connect(partial(self.remove_script, main_view, script_view))
+        if model is not None:
+            script_view.model.__dict__ = model
+            script_view.the_view.refresh_view()
+
+    def remove_script(self, script_view):
+        """
+
+        Args:
+            script_view (auri.views.script_module_view.ScriptModuleView):
+        """
+        self.main_view.scrollable_layout.removeWidget(script_view)
+        script_view.deleteLater()
+
     def set_window_title(self, title):
         self.bootstrap_view.setWindowTitle(title)
 
     def new_project(self):
-        assert(isinstance(self.main_view, MainView))
+        assert (isinstance(self.main_view, MainView))
         while self.main_view.scrollable_layout.count():
             child = self.main_view.scrollable_layout.takeAt(0)
             if child.widget():
@@ -39,7 +68,23 @@ class CommonController(object):
         self.set_window_title("Auri - New Project")
 
     def open_project(self):
-        pass
+        self.dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
+        if self.dialog.exec_() == QtWidgets.QDialog.Accepted:
+            self.new_project()
+            # Load the file
+            self.main_model.current_project = self.dialog.selectedFiles()[0]
+            file(self.main_model.current_project, "r").close()
+            project_file_path = os.path.abspath(self.main_model.current_project)
+            with open(project_file_path, "r") as project_file:
+                self.project_model.__dict__ = json.load(project_file, object_pairs_hook=OrderedDict)
+            # Create the project
+            for index in self.project_model.scripts_in_order:
+                category = self.project_model.scripts_in_order[index]["Module Category"]
+                script = self.project_model.scripts_in_order[index]["Module Script"]
+                model = self.project_model.scripts_in_order[index]["Model"]
+                module_name = model["module_name"]
+                self.add_script(category, script, module_name, self.main_view, model=model)
+            self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
 
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
@@ -62,13 +107,9 @@ class CommonController(object):
             self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
 
     def save_project_as(self):
-        dialog = QtWidgets.QFileDialog()
-        dialog.setFilter(dialog.filter() | QtCore.QDir.Hidden)
-        dialog.setDefaultSuffix("json")
-        dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
-        dialog.setNameFilters(["JSON (*.json)"])
-        if dialog.exec_() == QtWidgets.QDialog.Accepted:
-            self.main_model.current_project = dialog.selectedFiles()[0]
+        self.dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        if self.dialog.exec_() == QtWidgets.QDialog.Accepted:
+            self.main_model.current_project = self.dialog.selectedFiles()[0]
             file(self.main_model.current_project, "w").close()
             self.save_project()
         else:
@@ -76,7 +117,7 @@ class CommonController(object):
             if self.main_model.current_project is not None:
                 if not os.path.isfile(self.main_model.current_project):
                     self.main_model.current_project = None
-                    self.bootstrap_view.setWindowTitle("Auri")
+                    self.set_window_title("Auri - New Project")
 
     def refresh(self):
         self.refresh_categories()

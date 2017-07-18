@@ -24,6 +24,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
         # noinspection PyUnresolvedReferences
         the_ctrl.model.module_name = module_name
+        self.the_view = the_view
         self.model = the_ctrl.model
 
         grp_title = "{0} - {1} - {2}".format(category, script, module_name)
@@ -63,7 +64,11 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         self.delete_btn.setIcon(delete_icon)
         self.delete_btn.setIconSize(btns_size)
         self.delete_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+
+        # TODO: Event should be removed, not necessary
+        # TODO: Should check if refreshing every time we press Execute All is fast enough
         self.delete_btn.pressed.connect(partial(self.remove_ctrl, the_ctrl))
+
         # Add the buttons
         btns_layout.addWidget(up_btn)
         btns_layout.addWidget(down_btn)
@@ -72,6 +77,8 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         script_layout.addLayout(btns_layout, 0, 0)
         # Add the view
         script_layout.addWidget(the_view, 1, 0)
+
+        # TODO: Should be removed, not necessary
         if ctrl_index < 0:
             self.main_model.scripts_to_execute.append(the_ctrl)
         else:
@@ -80,5 +87,6 @@ class ScriptModuleView(QtWidgets.QGroupBox):
     def get_index(self):
         return self.parent().layout().indexOf(self)
 
+    # TODO: Should be remove, not necessary
     def remove_ctrl(self, the_ctrl):
         self.main_model.scripts_to_execute.remove(the_ctrl)

@@ -4,6 +4,8 @@ from PySide2 import QtGui, QtWidgets
 
 class View(AuriScriptView):
     def __init__(self, *args, **kwargs):
+        self.chk_a = QtWidgets.QCheckBox("Checkbox A")
+        self.txt_a = QtWidgets.QLineEdit()
         super(View, self).__init__(*args, **kwargs)
 
     def set_model(self):
@@ -13,17 +15,19 @@ class View(AuriScriptView):
         self.ctrl = Controller(self.model)
 
     def setup_ui(self):
-        chk_a = QtWidgets.QCheckBox("Checkbox A")
-        chk_a.stateChanged.connect(self.ctrl.on_chk_a_changed)
+        self.chk_a.stateChanged.connect(self.ctrl.on_chk_a_changed)
 
-        txt_a = QtWidgets.QLineEdit()
-        txt_a.textChanged.connect(self.ctrl.on_txt_a_changed)
+        self.txt_a.textChanged.connect(self.ctrl.on_txt_a_changed)
 
         main_layout = QtWidgets.QHBoxLayout()
-        main_layout.addWidget(chk_a)
-        main_layout.addWidget(txt_a)
+        main_layout.addWidget(self.chk_a)
+        main_layout.addWidget(self.txt_a)
 
         self.setLayout(main_layout)
+
+    def refresh_view(self):
+        self.chk_a.setChecked(self.model.chk_a)
+        self.txt_a.setText(self.model.txt_a)
 
 
 class Controller(AuriScriptController):

@@ -15,6 +15,9 @@ class View(AuriScriptView):
     def setup_ui(self):
         pass
 
+    def refresh_view(self):
+        pass
+
 
 class Controller(AuriScriptController):
     def __init__(self, model):
