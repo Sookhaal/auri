@@ -5,7 +5,7 @@ from auri.auri_lib import grpbox, get_auri_icon
 
 
 class ScriptModuleView(QtWidgets.QGroupBox):
-    def __init__(self, category, script, module_name, main_model, ctrl_index=-1):
+    def __init__(self, category, script, module_name, main_model):
         """
 
         Args:
@@ -22,7 +22,6 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         super(ScriptModuleView, self).__init__()
         # Create the script module view & controller
         exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
-        # noinspection PyUnresolvedReferences
         the_ctrl.model.module_name = module_name
         self.the_view = the_view
         self.model = the_ctrl.model
@@ -38,19 +37,19 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         btns_layout = QtWidgets.QHBoxLayout()
         btns_size = QtCore.QSize(24, 24)
 
-        up_btn = QtWidgets.QToolButton()
+        self.up_btn = QtWidgets.QToolButton()
         up_icon = QtGui.QIcon()
         up_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Up.png")))
-        up_btn.setIcon(up_icon)
-        up_btn.setIconSize(btns_size)
-        up_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+        self.up_btn.setIcon(up_icon)
+        self.up_btn.setIconSize(btns_size)
+        self.up_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
 
-        down_btn = QtWidgets.QToolButton()
+        self.down_btn = QtWidgets.QToolButton()
         down_icon = QtGui.QIcon()
         down_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Down.png")))
-        down_btn.setIcon(down_icon)
-        down_btn.setIconSize(btns_size)
-        down_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+        self.down_btn.setIcon(down_icon)
+        self.down_btn.setIconSize(btns_size)
+        self.down_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
 
         self.duplicate_btn = QtWidgets.QToolButton()
         duplicate_icon = QtGui.QIcon()
@@ -67,8 +66,8 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         self.delete_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
 
         # Add the buttons
-        btns_layout.addWidget(up_btn)
-        btns_layout.addWidget(down_btn)
+        btns_layout.addWidget(self.up_btn)
+        btns_layout.addWidget(self.down_btn)
         btns_layout.addWidget(self.duplicate_btn)
         btns_layout.addWidget(self.delete_btn)
         script_layout.addLayout(btns_layout, 0, 0)

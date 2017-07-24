@@ -33,16 +33,29 @@ class CommonController(object):
 
     def add_script(self, category, script, module_name, main_view, script_module_instance=None, model=None):
         if script_module_instance is not None:
-            script_view = ScriptModuleView(category, script, module_name, self.main_model, script_module_instance.get_index() + 1)
+            script_view = ScriptModuleView(category, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
         else:
             script_view = ScriptModuleView(category, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(-1, script_view)
         script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
         script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view))
+        script_view.up_btn.pressed.connect(partial(self.move_script, script_view, 1))
+        script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         if model is not None:
             script_view.model.__dict__ = model
             script_view.the_view.refresh_view()
+
+    def move_script(self, script_view, offset_position):
+        """
+
+        Args:
+            script_view (auri.views.script_module_view.ScriptModuleView):
+            offset_position (int): 1 move one position up, -1 move one position down
+        """
+        old_position = script_view.get_index()
+        self.main_view.scrollable_layout.removeWidget(script_view)
+        self.main_view.scrollable_layout.insertWidget(old_position - offset_position, script_view)
 
     def remove_script(self, script_view):
         """
