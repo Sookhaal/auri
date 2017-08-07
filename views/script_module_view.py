@@ -21,7 +21,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
         super(ScriptModuleView, self).__init__()
         # Create the script module view & controller
-        exec "import auri.scripts.{0}.{1} as the_script; the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
+        exec "import auri.scripts.{0}.{1} as the_script; reload(the_script); the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
         the_ctrl.model.module_name = module_name
         self.the_view = the_view
         self.model = the_ctrl.model
