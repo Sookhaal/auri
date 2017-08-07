@@ -44,7 +44,7 @@ class CommonController(object):
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         if model is not None:
             script_view.model.__dict__ = model
-            script_view.the_view.refresh_view()
+        script_view.the_view.refresh_view()
 
     def move_script(self, script_view, offset_position):
         """
