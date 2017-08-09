@@ -51,6 +51,10 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         self.down_btn.setIconSize(btns_size)
         self.down_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
 
+        self.edit_btn = QtWidgets.QToolButton()
+        self.edit_btn.setText("EDIT")
+        self.edit_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+
         self.duplicate_btn = QtWidgets.QToolButton()
         duplicate_icon = QtGui.QIcon()
         duplicate_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Duplicate.png")))
@@ -65,14 +69,27 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         self.delete_btn.setIconSize(btns_size)
         self.delete_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
 
+
         # Add the buttons
         btns_layout.addWidget(self.up_btn)
         btns_layout.addWidget(self.down_btn)
+        btns_layout.addWidget(self.edit_btn)
         btns_layout.addWidget(self.duplicate_btn)
         btns_layout.addWidget(self.delete_btn)
         script_layout.addLayout(btns_layout, 0, 0)
         # Add the view
         script_layout.addWidget(the_view, 1, 0)
+
+    def change_module_name(self, module_name=""):
+        grp_title = "{0} - {1} - {2}".format(self.category, self.script, module_name)
+        self.setTitle(grp_title)
+        self.model.module_name = module_name
+        self.module_name = module_name
+
+    def refresh_module_name(self):
+        self.module_name = self.model.module_name
+        grp_title = "{0} - {1} - {2}".format(self.category, self.script, self.module_name)
+        self.setTitle(grp_title)
 
     def get_index(self):
         return self.parent().layout().indexOf(self)
