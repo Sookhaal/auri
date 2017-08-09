@@ -81,14 +81,18 @@ class CommonController(object):
         self.project_model.scripts_to_execute = []
         self.set_window_title("Auri - New Project")
 
-    def open_project(self):
+    def open_project(self, is_import=False):
         self.dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         if self.dialog.exec_() == QtWidgets.QDialog.Accepted:
-            self.new_project()
-            # Load the file
-            self.main_model.current_project = self.dialog.selectedFiles()[0]
-            file(self.main_model.current_project, "r").close()
-            project_file_path = os.path.abspath(self.main_model.current_project)
+            if not is_import:
+                self.new_project()
+                # Load the file
+                self.main_model.current_project = self.dialog.selectedFiles()[0]
+                file(self.main_model.current_project, "r").close()
+                project_file_path = os.path.abspath(self.main_model.current_project)
+                self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
+            else:
+                project_file_path = os.path.abspath(self.dialog.selectedFiles()[0])
             with open(project_file_path, "r") as project_file:
                 self.project_model.__dict__ = json.load(project_file, object_pairs_hook=OrderedDict)
             # Create the project
@@ -98,7 +102,6 @@ class CommonController(object):
                 model = self.project_model.scripts_in_order[index]["Model"]
                 module_name = model["module_name"]
                 self.add_script(category, script, module_name, self.main_view, model=model)
-            self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
 
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}

@@ -1,4 +1,5 @@
 from PySide2 import QtWidgets, QtCore, QtGui
+from functools import partial
 
 
 class MenuBarView(QtWidgets.QMenuBar):
@@ -16,6 +17,7 @@ class MenuBarView(QtWidgets.QMenuBar):
         file_menu.addAction(self.open_project_action())
         file_menu.addAction(self.save_project_action())
         file_menu.addAction(self.save_project_as_action())
+        file_menu.addAction(self.import_project_action())
 
         edit_menu = self.addMenu("&Edit")
         edit_menu.addAction(self.refresh_action())
@@ -48,6 +50,13 @@ class MenuBarView(QtWidgets.QMenuBar):
         action.triggered.connect(self.common_ctrl.save_project_as)
         action.setShortcut("Ctrl+Shift+S")
         action.setStatusTip("Save current project as")
+        return action
+
+    def import_project_action(self):
+        action = QtWidgets.QAction("Import Project", self)
+        action.triggered.connect(partial(self.common_ctrl.open_project, True))
+        action.setShortcut("Ctrl+I")
+        action.setStatusTip("Import & append a project to the currect project")
         return action
 
     def refresh_action(self):
