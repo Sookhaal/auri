@@ -40,7 +40,7 @@ def get_scripts(category=None):
     if category is None:
         category = get_categories()[0]
     scripts = next(os.walk(os.path.join(get_scripts_directory(), category)))[2]
-    excludes = r"__init__.py"
+    excludes = r"(__init__.py)|(.*.pyc)"
     scripts = [s for s in scripts if not re.match(excludes, s)]
     return scripts
 
