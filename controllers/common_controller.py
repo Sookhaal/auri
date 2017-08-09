@@ -35,6 +35,7 @@ class CommonController(object):
         if script_module_instance is not None:
             script_view = ScriptModuleView(category, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
+            script_view.model.__dict__ = script_module_instance.model.__dict__
         else:
             script_view = ScriptModuleView(category, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(-1, script_view)
