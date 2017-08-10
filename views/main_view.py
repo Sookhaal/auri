@@ -100,9 +100,14 @@ class MainView(QtWidgets.QWidget):
             execute_all_btn = push_button("Execute All", self.main_ctrl.execute_all)
             return execute_all_btn
 
+        def create_prebuild_all_btn():
+            prebuild_all_btn = push_button("Prebuild All", self.main_ctrl.prebuild_all)
+            return prebuild_all_btn
+
         build_layout = QtWidgets.QHBoxLayout()
         build_grp = grpbox("Build", build_layout)
 
+        build_layout.addWidget(create_prebuild_all_btn())
         build_layout.addWidget(create_execute_all_btn())
         self.main_layout.addWidget(build_grp)
         pass

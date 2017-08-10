@@ -103,6 +103,10 @@ class AuriScriptController:
     def execute(self):
         pass
 
+    @abc.abstractmethod
+    def prebuild(self):
+        pass
+
 
 class AuriScriptModel:
     def __init__(self):

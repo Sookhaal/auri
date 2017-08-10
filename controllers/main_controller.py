@@ -40,3 +40,8 @@ class MainController(object):
         self.common_ctrl.refresh_project_model()
         for script in self.main_model.scripts_to_execute:
             script.execute()
+
+    def prebuild_all(self):
+        self.common_ctrl.refresh_project_model()
+        for script in self.main_model.scripts_to_execute:
+            script.prebuild()
