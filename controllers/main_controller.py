@@ -17,14 +17,14 @@ class MainController(object):
 
     def category_changed(self, new_category):
         if len(new_category) > 0:
-            self.common_ctrl.refresh_subcategories(new_category)
             self.main_model.selected_category = new_category
+            self.common_ctrl.refresh_subcategories(new_category)
 
     def subcategory_changed(self, new_subcategory):
         if len(new_subcategory) > 0:
-            self.common_ctrl.refresh_scripts(self.main_model.selected_category, new_subcategory)
             self.main_model.selected_subcategory = new_subcategory
             self.main_model.selected_script = None
+            self.common_ctrl.refresh_scripts(self.main_model.selected_category, new_subcategory)
 
     def name_changed(self, new_name):
         self.main_model.module_name = new_name.replace(" ", "_")
