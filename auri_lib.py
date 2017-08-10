@@ -36,10 +36,20 @@ def get_categories():
     return categories
 
 
-def get_scripts(category=None):
+def get_subcategories(category=None):
     if category is None:
         category = get_categories()[0]
-    scripts = next(os.walk(os.path.join(get_scripts_directory(), category)))[2]
+    category = os.path.join(get_scripts_directory(), category)
+    subcategories = [subcat for subcat in os.listdir(category) if os.path.isdir(os.path.join(category, subcat))]
+    return subcategories
+
+
+def get_scripts(category=None, subcategory=None):
+    if category is None:
+        category = get_categories()[0]
+    if subcategory is None:
+        subcategory = get_subcategories(category)[0]
+    scripts = next(os.walk(os.path.join(get_scripts_directory(), category, subcategory)))[2]
     excludes = r"(__init__.py)|(.*.pyc)"
     scripts = [s for s in scripts if not re.match(excludes, s)]
     return scripts

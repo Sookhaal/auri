@@ -4,7 +4,7 @@ from PySide2 import QtWidgets, QtCore
 from collections import OrderedDict
 from functools import partial
 
-from auri.auri_lib import get_categories, get_scripts
+from auri.auri_lib import get_categories, get_scripts, get_subcategories
 from auri.views.edit_script_view import EditScriptView
 from auri.views.main_view import MainView
 from auri.views.script_module_view import ScriptModuleView
@@ -29,22 +29,23 @@ class CommonController(object):
         self.bootstrap_view = bootstrap_view
         self.main_view = None
         self.category_combobox = None
+        self.subcategory_combobox = None
         self.script_selector = None
         self.edit_script_dialog = None
         self.refresh()
 
-    def add_script(self, category, script, module_name, main_view, script_module_instance=None, model=None):
+    def add_script(self, category, subcategory, script, module_name, main_view, script_module_instance=None, model=None):
         if script_module_instance is not None:
-            script_view = ScriptModuleView(category, script, module_name, self.main_model)
+            script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
             script_view.model.__dict__ = script_module_instance.model.__dict__.copy()
         else:
-            script_view = ScriptModuleView(category, script, module_name, self.main_model)
+            script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(-1, script_view)
         script_view.up_btn.pressed.connect(partial(self.move_script, script_view, 1))
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         script_view.edit_btn.pressed.connect(partial(self.edit_script, script_view))
-        script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, script, module_name, main_view, script_view))
+        script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, subcategory, script, module_name, main_view, script_view))
         script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view))
         script_view.refresh_module_name()
         if model is not None:
@@ -113,10 +114,11 @@ class CommonController(object):
             # Create the project
             for index in self.project_model.scripts_in_order:
                 category = self.project_model.scripts_in_order[index]["Module Category"]
+                subcategory = self.project_model.scripts_in_order[index]["Module SubCategory"]
                 script = self.project_model.scripts_in_order[index]["Module Script"]
                 model = self.project_model.scripts_in_order[index]["Model"]
                 module_name = model["module_name"]
-                self.add_script(category, script, module_name, self.main_view, model=model)
+                self.add_script(category, subcategory, script, module_name, self.main_view, model=model)
 
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
@@ -126,6 +128,7 @@ class CommonController(object):
             assert isinstance(script_view, ScriptModuleView)
             self.project_model.scripts_in_order[script_view.get_index()] = {}
             self.project_model.scripts_in_order[script_view.get_index()]["Module Category"] = script_view.category
+            self.project_model.scripts_in_order[script_view.get_index()]["Module SubCategory"] = script_view.subcategory
             self.project_model.scripts_in_order[script_view.get_index()]["Module Script"] = script_view.script
             self.project_model.scripts_in_order[script_view.get_index()]["Model"] = script_view.model.__dict__
             self.main_model.scripts_to_execute.append(script_view.the_ctrl)
@@ -155,6 +158,7 @@ class CommonController(object):
 
     def refresh(self):
         self.refresh_categories()
+        self.refresh_subcategories()
         self.refresh_scripts()
 
     def refresh_categories(self):
@@ -163,6 +167,12 @@ class CommonController(object):
         if self.category_combobox is not None:
             self.category_combobox.setCurrentIndex(0)
 
-    def refresh_scripts(self, category=None):
-        scripts = get_scripts(category)
+    def refresh_subcategories(self, new_category=None):
+        subcategories = get_subcategories(new_category)
+        self.main_model.subcategories = subcategories
+        if self.subcategory_combobox is not None:
+            self.subcategory_combobox.setCurrentIndex(0)
+
+    def refresh_scripts(self, category=None, subcategory=None):
+        scripts = get_scripts(category, subcategory)
         self.main_model.scripts = scripts

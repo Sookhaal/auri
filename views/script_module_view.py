@@ -5,7 +5,7 @@ from auri.auri_lib import grpbox, get_auri_icon
 
 
 class ScriptModuleView(QtWidgets.QGroupBox):
-    def __init__(self, category, script, module_name, main_model):
+    def __init__(self, category, subcategory, script, module_name, main_model):
         """
 
         Args:
@@ -16,18 +16,19 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         """
         self.main_model = main_model
         self.category = category
+        self.subcategory = subcategory
         self.script = script
         self.module_name = module_name
 
         super(ScriptModuleView, self).__init__()
         # Create the script module view & controller
-        exec "import auri.scripts.{0}.{1} as the_script; reload(the_script); the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, script)
+        exec "import auri.scripts.{0}.{1}.{2} as the_script; reload(the_script); the_view = the_script.View(); the_ctrl = the_view.ctrl".format(category, subcategory, script)
         the_ctrl.model.module_name = module_name
         self.the_view = the_view
         self.model = the_ctrl.model
         self.the_ctrl = the_ctrl
 
-        grp_title = "{0} - {1} - {2}".format(category, script, module_name)
+        grp_title = "{0} - {1} - {2} - {3}".format(category, subcategory, script, module_name)
         self.setTitle(grp_title)
         # Create the shell to hold the view
         script_layout = QtWidgets.QGridLayout()

@@ -17,15 +17,21 @@ class MainController(object):
 
     def category_changed(self, new_category):
         if len(new_category) > 0:
-            self.common_ctrl.refresh_scripts(new_category)
+            self.common_ctrl.refresh_subcategories(new_category)
             self.main_model.selected_category = new_category
+
+    def subcategory_changed(self, new_subcategory):
+        if len(new_subcategory) > 0:
+            self.common_ctrl.refresh_scripts(self.main_model.selected_category, new_subcategory)
+            self.main_model.selected_subcategory = new_subcategory
             self.main_model.selected_script = None
 
     def name_changed(self, new_name):
         self.main_model.module_name = new_name.replace(" ", "_")
 
-    def setup(self, category_combobox, script_selector):
+    def setup(self, category_combobox, subcategory_combobox, script_selector):
         self.common_ctrl.category_combobox = category_combobox
+        self.common_ctrl.subcategory_combobox = subcategory_combobox
         self.common_ctrl.script_selector = script_selector
 
     def add_selected_script(self, main_view):
@@ -34,7 +40,7 @@ class MainController(object):
         Args:
             main_view (auri.views.main_view.MainView):
         """
-        self.common_ctrl.add_script(self.main_model.selected_category, self.main_model.selected_script, self.main_model.module_name, main_view)
+        self.common_ctrl.add_script(self.main_model.selected_category, self.main_model.selected_subcategory, self.main_model.selected_script, self.main_model.module_name, main_view)
 
     def execute_all(self):
         self.common_ctrl.refresh_project_model()
