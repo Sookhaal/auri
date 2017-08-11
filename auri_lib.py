@@ -80,6 +80,16 @@ def get_auri_icon(icon_name):
     return os.path.join(get_resources_path(), "icons", icon_name)
 
 
+def is_checked(chkbox_state):
+    """
+    Connect to a checkbox stateChanged
+    Args:
+        chkbox_state (int):
+    """
+    switch = {0: False, 2: True}
+    return switch.get(chkbox_state)
+
+
 class AuriScriptView(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super(AuriScriptView, self).__init__(*args, **kwargs)
