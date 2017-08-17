@@ -1,6 +1,6 @@
 import json
 import os
-from PySide2 import QtWidgets, QtCore
+from auri.vendor.Qt import QtWidgets, QtCore
 from collections import OrderedDict
 from functools import partial
 

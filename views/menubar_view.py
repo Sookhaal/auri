@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtCore, QtGui
+from auri.vendor.Qt import QtWidgets, QtCore, QtGui
 from functools import partial
 
 

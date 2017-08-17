@@ -1,7 +1,7 @@
 import abc
 import os
 import re
-from PySide2 import QtWidgets
+from auri.vendor.Qt import QtWidgets
 
 
 def get_application():

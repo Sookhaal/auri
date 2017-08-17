@@ -1,6 +1,6 @@
 from auri.auri_lib import get_application
 from auri.views.bootstrap_view import BootstrapView
-from Qt import QtWidgets
+from auri.vendor.Qt import QtWidgets
 import sys
 
 

@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from auri.vendor.Qt import QtWidgets
 from auri.controllers.common_controller import CommonController
 from auri.controllers.main_controller import MainController
 from auri.models.main_model import MainModel

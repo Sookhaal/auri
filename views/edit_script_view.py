@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtCore
+from auri.vendor.Qt import QtWidgets, QtCore
 from auri.auri_lib import push_button
 
 
