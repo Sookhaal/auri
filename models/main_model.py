@@ -1,4 +1,4 @@
-from PySide2 import QtGui, QtCore, QtWidgets
+from auri.vendor.Qt import QtGui, QtCore, QtWidgets
 
 
 class MainModel(object):
