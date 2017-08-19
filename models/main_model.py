@@ -3,9 +3,9 @@ from auri.vendor.Qt import QtGui, QtCore, QtWidgets
 
 class MainModel(object):
     def __init__(self):
-        self.categories_model = QtGui.QStringListModel()
-        self.subcategories_model = QtGui.QStringListModel()
-        self.scripts_model = QtGui.QStringListModel()
+        self.categories_model = QtCore.QStringListModel()
+        self.subcategories_model = QtCore.QStringListModel()
+        self.scripts_model = QtCore.QStringListModel()
         self.module_name = None
         self.selected_subcategory = None
         self.selected_category = None
