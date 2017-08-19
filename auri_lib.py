@@ -90,6 +90,12 @@ def is_checked(chkbox_state):
     return switch.get(chkbox_state)
 
 
+def get_houdini_style():
+    with open(os.path.join(get_resources_path(), "themes", "houdini_base.qss"), "r") as houdini_style:
+        style = houdini_style.read()
+    return style
+
+
 class AuriScriptView(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super(AuriScriptView, self).__init__(*args, **kwargs)

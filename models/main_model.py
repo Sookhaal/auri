@@ -1,4 +1,4 @@
-from auri.vendor.Qt import QtGui, QtCore, QtWidgets
+from auri.vendor.Qt import QtCore
 
 
 class MainModel(object):
