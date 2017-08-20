@@ -170,8 +170,9 @@ class CommonController(object):
         old_current_project = self.main_model.current_project
 
         self.new_project()
-        self.main_model.current_project = old_current_project
-        self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
+        if old_current_project is not None:
+            self.main_model.current_project = old_current_project
+            self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
         self.project_model.__dict__ = old_project_model
 
         # TODO: Extract that
