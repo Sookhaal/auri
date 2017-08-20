@@ -1,15 +1,17 @@
-from auri.vendor.Qt import QtWidgets, QtCore, QtGui
+from auri.vendor.Qt import QtWidgets
 from functools import partial
 
 
 class MenuBarView(QtWidgets.QMenuBar):
-    def __init__(self, common_ctrl):
+    def __init__(self, common_ctrl, main_ctrl):
         """
 
         Args:
             common_ctrl (auri.controllers.common_controller.CommonController):
+            main_ctrl (auri.controllers.main_controller.MainController):
         """
         self.common_ctrl = common_ctrl
+        self.main_ctrl = main_ctrl
         super(MenuBarView, self).__init__()
 
         file_menu = self.addMenu("&File")
@@ -21,6 +23,8 @@ class MenuBarView(QtWidgets.QMenuBar):
 
         edit_menu = self.addMenu("&Edit")
         edit_menu.addAction(self.refresh_action())
+        edit_menu.addAction(self.prebuild_all_action())
+        edit_menu.addAction(self.execute_all_action())
 
         # about_menu = self.addMenu("&About")
 
@@ -64,4 +68,18 @@ class MenuBarView(QtWidgets.QMenuBar):
         action.triggered.connect(self.common_ctrl.refresh)
         action.setShortcut("Ctrl+R")
         action.setStatusTip("Refresh categories & scripts")
+        return action
+
+    def prebuild_all_action(self):
+        action = QtWidgets.QAction("Pre&build All", self)
+        action.triggered.connect(self.main_ctrl.prebuild_all)
+        action.setShortcut("Ctrl+B")
+        action.setStatusTip("Launch the Prebuild function of every scripts")
+        return action
+
+    def execute_all_action(self):
+        action = QtWidgets.QAction("&Execute All", self)
+        action.triggered.connect(self.main_ctrl.execute_all)
+        action.setShortcut("Ctrl+E")
+        action.setStatusTip("Launch the Execute function of every scripts")
         return action
