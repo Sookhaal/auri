@@ -13,7 +13,8 @@ def bootstrap_standalone():
 
 def bootstrap_maya():
     from pymel import core as pmc
-    win = BootstrapView(parent=pmc.toQtObject("MayaWindow"))
+    # No statusbar because there is already one in maya (bottom left by default)
+    win = BootstrapView(parent=pmc.toQtObject("MayaWindow"), statusBar=False)
 
 
 def bootstrap_houdini():
