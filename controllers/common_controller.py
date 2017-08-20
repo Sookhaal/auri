@@ -157,9 +157,31 @@ class CommonController(object):
                     self.set_window_title("Auri - New Project")
 
     def refresh(self):
+        # Reload UI
         self.refresh_categories()
         self.refresh_subcategories()
         self.refresh_scripts()
+
+        if self.main_view is None:
+            return
+        # Reload Scripts (temp save & reopen)
+        self.refresh_project_model()
+        old_project_model = self.project_model.__dict__
+        old_current_project = self.main_model.current_project
+
+        self.new_project()
+        self.main_model.current_project = old_current_project
+        self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
+        self.project_model.__dict__ = old_project_model
+
+        # TODO: Extract that
+        for index in self.project_model.scripts_in_order:
+            category = self.project_model.scripts_in_order[index]["Module Category"]
+            subcategory = self.project_model.scripts_in_order[index]["Module SubCategory"]
+            script = self.project_model.scripts_in_order[index]["Module Script"]
+            model = self.project_model.scripts_in_order[index]["Model"]
+            module_name = model["module_name"]
+            self.add_script(category, subcategory, script, module_name, self.main_view, model=model)
 
     def refresh_categories(self):
         categories = get_categories()
