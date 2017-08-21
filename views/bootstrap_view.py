@@ -8,13 +8,13 @@ from auri.views.menubar_view import MenuBarView
 
 
 class BootstrapView(QtWidgets.QMainWindow):
-    def __init__(self, parent=None, statusBar=True):
+    def __init__(self, parent=None, statusbar=True):
         super(BootstrapView, self).__init__(parent=parent)
         self.setWindowTitle("Auri - New Project")
         self.setMinimumWidth(400)
         self.setMinimumHeight(300)
         self.resize(500, 500)
-        if statusBar:
+        if statusbar:
             self.statusBar()
 
         self.main_model = MainModel()
