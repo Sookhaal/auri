@@ -23,6 +23,11 @@ def bootstrap_houdini():
     win.setStyleSheet(get_houdini_style())
 
 
+def bootstrap_modo():
+    import modo
+    win = BootstrapView()
+
+
 def bootstrap():
     if get_application() == "standalone":
         bootstrap_standalone()
@@ -30,6 +35,8 @@ def bootstrap():
         bootstrap_maya()
     elif get_application() == "houdini":
         bootstrap_houdini()
+    elif get_application() == "modo":
+        bootstrap_modo()
 
 
 if __name__ == "__main__":

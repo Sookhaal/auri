@@ -41,15 +41,15 @@ class MainView(QtWidgets.QWidget):
     def setup_parts_ui(self):
         def create_category_combobox():
             self.category_combobox.setModel(self.model.categories)
-            self.category_combobox.currentTextChanged.connect(self.main_ctrl.category_changed)
-            self.category_combobox.currentTextChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
+            self.category_combobox.currentIndexChanged.connect(self.main_ctrl.category_changed)
+            self.category_combobox.currentIndexChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
             self.model.selected_category = self.category_combobox.currentText()
             return self.category_combobox
 
         def create_subcategory_combobox():
             self.subcategory_combobox.setModel(self.model.subcategories)
-            self.subcategory_combobox.currentTextChanged.connect(self.main_ctrl.subcategory_changed)
-            self.subcategory_combobox.currentTextChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
+            self.subcategory_combobox.currentIndexChanged.connect(self.main_ctrl.subcategory_changed)
+            self.subcategory_combobox.currentIndexChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
             self.model.selected_subcategory = self.subcategory_combobox.currentText()
             return self.subcategory_combobox
 
