@@ -25,7 +25,11 @@ def get_application():
                     import MaxPlus
                     host_application = "3dsmax"
                 except ImportError:
-                    host_application = "standalone"
+                    try:
+                        import modo
+                        host_application = "modo"
+                    except ImportError:
+                        host_application = "standalone"
     return host_application
 
 

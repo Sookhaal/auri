@@ -1,6 +1,6 @@
 from auri.auri_lib import get_application, get_houdini_style
 from auri.views.bootstrap_view import BootstrapView
-from auri.vendor.Qt import QtWidgets
+from auri.vendor.Qt import QtWidgets, QtCore
 import sys
 
 
@@ -25,7 +25,7 @@ def bootstrap_houdini():
 
 def bootstrap_modo():
     import modo
-    win = BootstrapView(parent=QtWidgets.QApplication.activeWindow())
+    win = BootstrapView()
 
 
 def bootstrap_nuke():
