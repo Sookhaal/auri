@@ -26,6 +26,9 @@ class MenuBarView(QtWidgets.QMenuBar):
         edit_menu.addAction(self.prebuild_all_action())
         edit_menu.addAction(self.execute_all_action())
 
+        about_menu = self.addMenu("&Help")
+        about_menu.addAction(self.about_action())
+
         # about_menu = self.addMenu("&About")
 
     def new_project_action(self):
@@ -82,4 +85,11 @@ class MenuBarView(QtWidgets.QMenuBar):
         action.triggered.connect(self.main_ctrl.execute_all)
         action.setShortcut("Ctrl+E")
         action.setStatusTip("Launch the Execute function of every scripts")
+        return action
+
+    def about_action(self):
+        action = QtWidgets.QAction("&About", self)
+        action.triggered.connect(self.main_ctrl.show_about)
+        action.setShortcut("Ctrl+Alt+A")
+        action.setStatusTip("Show the About window")
         return action

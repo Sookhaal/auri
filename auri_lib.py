@@ -1,6 +1,7 @@
 import abc
 import os
 import re
+from auri import __version__
 from auri.vendor.Qt import QtWidgets
 
 
@@ -8,8 +9,9 @@ def get_application():
     try:
         import maya.OpenMayaUI as mui
         import maya.cmds as cmds
+        import pymel.core as pymel
         host_application = "maya"
-    except ImportError:
+    except (ImportError, TypeError):
         try:
             import hou
             host_application = "houdini"
@@ -25,6 +27,10 @@ def get_application():
                 except ImportError:
                     host_application = "standalone"
     return host_application
+
+
+def get_auri_version():
+    return __version__
 
 
 def get_scripts_directory():
