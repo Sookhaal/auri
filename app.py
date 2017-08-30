@@ -1,18 +1,31 @@
-from auri.autorig_lib import get_application
+from auri.auri_lib import get_application, get_houdini_style
 from auri.views.bootstrap_view import BootstrapView
-from Qt import QtWidgets
+from auri.vendor.Qt import QtWidgets
 import sys
 
 
 def bootstrap_standalone():
     app = QtWidgets.QApplication(sys.argv)
     win = BootstrapView()
+    win.setStyleSheet(get_houdini_style())
     app.exec_()
 
 
 def bootstrap_maya():
     from pymel import core as pmc
-    win = BootstrapView(parent=pmc.toQtObject("MayaWindow"))
+    # No statusbar because there is already one in maya (bottom left by default)
+    win = BootstrapView(parent=pmc.toQtObject("MayaWindow"), statusbar=False)
+
+
+def bootstrap_houdini():
+    import hou
+    win = BootstrapView(parent=hou.ui.mainQtWindow())
+    win.setStyleSheet(get_houdini_style())
+
+
+def bootstrap_modo():
+    import modo
+    win = BootstrapView()
 
 
 def bootstrap():
@@ -20,6 +33,10 @@ def bootstrap():
         bootstrap_standalone()
     elif get_application() == "maya":
         bootstrap_maya()
+    elif get_application() == "houdini":
+        bootstrap_houdini()
+    elif get_application() == "modo":
+        bootstrap_modo()
 
 
 if __name__ == "__main__":

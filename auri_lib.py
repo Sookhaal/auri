@@ -1,18 +1,17 @@
-import json
-import os
-import glob
-import re
-from PySide2 import QtWidgets
 import abc
+import os
+import re
+from auri import __version__
+from auri.vendor.Qt import QtWidgets
 
 
 def get_application():
-    host_application = ""
     try:
         import maya.OpenMayaUI as mui
         import maya.cmds as cmds
+        import pymel.core as pymel
         host_application = "maya"
-    except ImportError:
+    except (ImportError, TypeError):
         try:
             import hou
             host_application = "houdini"
@@ -22,8 +21,16 @@ def get_application():
                 import nukescripts
                 host_application = "nuke"
             except ImportError:
-                host_application = "standalone"
+                try:
+                    import MaxPlus
+                    host_application = "3dsmax"
+                except ImportError:
+                    host_application = "standalone"
     return host_application
+
+
+def get_auri_version():
+    return __version__
 
 
 def get_scripts_directory():
@@ -35,12 +42,23 @@ def get_categories():
     return categories
 
 
-def get_scripts(category=None):
+def get_subcategories(category=None):
     if category is None:
         category = get_categories()[0]
-    scripts = next(os.walk(os.path.join(get_scripts_directory(), category)))[2]
-    excludes = r"__init__.py"
-    scripts = [s for s in scripts if not re.match(excludes, s)]
+    category = os.path.join(get_scripts_directory(), category)
+    subcategories = [subcat for subcat in os.listdir(category) if subcat != ".git" and os.path.isdir(os.path.join(category, subcat))]
+    return subcategories
+
+
+def get_scripts(category=None, subcategory=None):
+    if category is None:
+        category = get_categories()[0]
+    if subcategory is None:
+        subcategory = get_subcategories(category)[0]
+    scripts = next(os.walk(os.path.join(get_scripts_directory(), category, subcategory)))[2]
+    excludes = r"(__init__.py)|(.*.pyc)"
+    includes = r".*.py$"
+    scripts = [s for s in scripts if re.match(includes, s) and not re.match(excludes, s)]
     return scripts
 
 
@@ -60,24 +78,28 @@ def grpbox(title, lyt=None):
     return g
 
 
-def try_create_rig_file(rig_file_path):
-    if not os.path.isfile(rig_file_path):
-        file(rig_file_path, "w").close()
-
-
-def load_rig_file(rig_file_path):
-    if os.stat(rig_file_path).st_size > 0:
-        with open(rig_file_path) as json_file:
-            return json.load(json_file)
-    return {}
-
-
 def get_resources_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources")
 
 
 def get_auri_icon(icon_name):
     return os.path.join(get_resources_path(), "icons", icon_name)
+
+
+def is_checked(chkbox_state):
+    """
+    Connect to a checkbox stateChanged
+    Args:
+        chkbox_state (int):
+    """
+    switch = {0: False, 2: True}
+    return switch.get(chkbox_state)
+
+
+def get_houdini_style():
+    with open(os.path.join(get_resources_path(), "themes", "houdini_base.qss"), "r") as houdini_style:
+        style = houdini_style.read()
+    return style
 
 
 class AuriScriptView(QtWidgets.QWidget):
@@ -101,6 +123,10 @@ class AuriScriptView(QtWidgets.QWidget):
     def setup_ui(self):
         pass
 
+    @abc.abstractmethod
+    def refresh_view(self):
+        pass
+
 
 class AuriScriptController:
     def __init__(self):
@@ -110,7 +136,11 @@ class AuriScriptController:
     def execute(self):
         pass
 
+    @abc.abstractmethod
+    def prebuild(self):
+        pass
+
 
 class AuriScriptModel:
     def __init__(self):
-        pass
+        self.module_name = None

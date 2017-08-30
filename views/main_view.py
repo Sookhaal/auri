@@ -1,7 +1,7 @@
-from PySide2 import QtWidgets, QtCore, QtGui
+from auri.vendor.Qt import QtWidgets, QtCore, QtGui
 from functools import partial
 
-from auri.autorig_lib import push_button, grpbox
+from auri.auri_lib import push_button, grpbox
 from auri.views.script_selector_view import ScriptSelectorView
 
 
@@ -19,11 +19,12 @@ class MainView(QtWidgets.QWidget):
         self.main_layout = QtWidgets.QVBoxLayout()
         self.scrollable_layout = QtWidgets.QVBoxLayout()
         self.category_combobox = QtWidgets.QComboBox()
+        self.subcategory_combobox = QtWidgets.QComboBox()
         self.script_selector_dialog = ScriptSelectorView(self.model.scripts, self.model)
         self.script_selector = push_button("Scripts", self.open_script_selector)
-        self.add_btn = push_button("Add", partial(self.main_ctrl.add_script, self))
+        self.add_btn = push_button("Add", partial(self.main_ctrl.add_selected_script, self))
 
-        self.main_ctrl.setup(self.category_combobox, self.script_selector)
+        self.main_ctrl.setup(self.category_combobox, self.subcategory_combobox, self.script_selector)
         self.setup_ui()
 
     def open_script_selector(self):
@@ -40,10 +41,17 @@ class MainView(QtWidgets.QWidget):
     def setup_parts_ui(self):
         def create_category_combobox():
             self.category_combobox.setModel(self.model.categories)
-            self.category_combobox.currentTextChanged.connect(self.main_ctrl.category_changed)
-            self.category_combobox.currentTextChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
+            self.category_combobox.currentIndexChanged.connect(self.main_ctrl.category_changed)
+            self.category_combobox.currentIndexChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
             self.model.selected_category = self.category_combobox.currentText()
             return self.category_combobox
+
+        def create_subcategory_combobox():
+            self.subcategory_combobox.setModel(self.model.subcategories)
+            self.subcategory_combobox.currentIndexChanged.connect(self.main_ctrl.subcategory_changed)
+            self.subcategory_combobox.currentIndexChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
+            self.model.selected_subcategory = self.subcategory_combobox.currentText()
+            return self.subcategory_combobox
 
         def create_script_selector():
             return self.script_selector
@@ -71,6 +79,7 @@ class MainView(QtWidgets.QWidget):
         parts_grp = grpbox("Parts", parts_layout)
 
         parts_layout.addWidget(create_category_combobox())
+        parts_layout.addWidget(create_subcategory_combobox())
         parts_layout.addWidget(create_script_selector())
         parts_layout.addWidget(create_name_textbox())
         parts_layout.addWidget(create_add_btn())
@@ -100,9 +109,14 @@ class MainView(QtWidgets.QWidget):
             execute_all_btn = push_button("Execute All", self.main_ctrl.execute_all)
             return execute_all_btn
 
+        def create_prebuild_all_btn():
+            prebuild_all_btn = push_button("Prebuild All", self.main_ctrl.prebuild_all)
+            return prebuild_all_btn
+
         build_layout = QtWidgets.QHBoxLayout()
         build_grp = grpbox("Build", build_layout)
 
+        build_layout.addWidget(create_prebuild_all_btn())
         build_layout.addWidget(create_execute_all_btn())
         self.main_layout.addWidget(build_grp)
         pass

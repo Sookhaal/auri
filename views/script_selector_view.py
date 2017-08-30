@@ -1,6 +1,6 @@
 import os
-from PySide2 import QtWidgets, QtCore
-from auri.autorig_lib import push_button
+from auri.vendor.Qt import QtWidgets, QtCore
+from auri.auri_lib import push_button
 
 
 class ScriptSelectorView(QtWidgets.QDialog):
