@@ -1,4 +1,6 @@
 from functools import partial
+
+from auri.views.about_view import AboutView
 from auri.views.script_module_view import ScriptModuleView
 
 
@@ -14,6 +16,7 @@ class MainController(object):
         self.main_model = main_model
         self.project_model = project_model
         self.common_ctrl = common_ctrl
+        self.about_dialog = AboutView()
 
     def category_changed(self, new_category):
         if new_category is not None:
@@ -51,3 +54,6 @@ class MainController(object):
         self.common_ctrl.refresh_project_model()
         for script in self.main_model.scripts_to_execute:
             script.prebuild()
+
+    def show_about(self):
+        result = self.about_dialog.exec_()
