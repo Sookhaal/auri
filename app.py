@@ -25,7 +25,11 @@ def bootstrap_houdini():
 
 def bootstrap_modo():
     import modo
-    win = BootstrapView()
+    win = BootstrapView(parent=QtWidgets.QApplication.activeWindow())
+
+
+def bootstrap_nuke():
+    win = BootstrapView(parent=QtWidgets.QApplication.activeWindow())
 
 
 def bootstrap():
@@ -37,6 +41,8 @@ def bootstrap():
         bootstrap_houdini()
     elif get_application() == "modo":
         bootstrap_modo()
+    elif get_application() == "nuke":
+        bootstrap_nuke()
 
 
 if __name__ == "__main__":
