@@ -29,8 +29,7 @@ class MainView(QtWidgets.QWidget):
 
     def open_script_selector(self):
         result = self.script_selector_dialog.exec_()
-        if result == 1:
-            self.add_btn.setDisabled(self.model.add_btn_disabled)
+        self.add_btn.setDisabled(self.model.add_btn_disabled)
 
     def setup_ui(self):
         self.setup_parts_ui()
@@ -61,11 +60,13 @@ class MainView(QtWidgets.QWidget):
 
             # Replace spaces with underscores
             def name_fixup():
+                old_cursor_pos = name_textbox.cursorPosition()
                 name_textbox.setText(name_textbox.text().replace(" ", "_"))
+                name_textbox.setCursorPosition(old_cursor_pos)
 
             name_textbox.setPlaceholderText("Name")
-            name_validator = QtGui.QRegExpValidator(QtCore.QRegExp("^[a-zA-Z][a-zA-Z\d#_ ]*"))
-            name_textbox.setValidator(name_validator)
+            # name_validator = QtGui.QRegExpValidator(QtCore.QRegExp("^[a-zA-Z][a-zA-Z\d#_ ]*"))
+            # name_textbox.setValidator(name_validator)
             name_textbox.textChanged.connect(name_fixup)
             name_textbox.textChanged.connect(self.main_ctrl.name_changed)
             name_textbox.textChanged.connect(lambda: self.add_btn.setDisabled(self.model.add_btn_disabled))
