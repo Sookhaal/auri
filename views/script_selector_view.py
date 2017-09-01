@@ -1,6 +1,6 @@
 import os
 from auri.vendor.Qt import QtWidgets, QtCore
-from auri.auri_lib import push_button
+from auri.auri_lib import push_button, get_application, get_houdini_style
 
 
 class ScriptSelectorView(QtWidgets.QDialog):
@@ -20,6 +20,8 @@ class ScriptSelectorView(QtWidgets.QDialog):
         self.ok_btn = push_button("Ok", self.ok_pressed)
         self.cancel_btn = push_button("Cancel", self.cancel_pressed)
         self.setup_ui()
+        if get_application() is "standalone" or get_application() is "houdini":
+            self.setStyleSheet(get_houdini_style())
 
     def setup_ui(self):
         self.script_list.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
