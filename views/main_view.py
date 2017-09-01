@@ -29,8 +29,7 @@ class MainView(QtWidgets.QWidget):
 
     def open_script_selector(self):
         result = self.script_selector_dialog.exec_()
-        if result == 1:
-            self.add_btn.setDisabled(self.model.add_btn_disabled)
+        self.add_btn.setDisabled(self.model.add_btn_disabled)
 
     def setup_ui(self):
         self.setup_parts_ui()

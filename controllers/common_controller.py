@@ -7,6 +7,7 @@ from functools import partial
 from auri.auri_lib import get_categories, get_scripts, get_subcategories
 from auri.views.edit_script_view import EditScriptView
 from auri.views.main_view import MainView
+from auri.views.message_box_view import MessageBoxView
 from auri.views.script_module_view import ScriptModuleView
 
 
@@ -32,9 +33,14 @@ class CommonController(object):
         self.subcategory_combobox = None
         self.script_selector = None
         self.edit_script_dialog = None
+        self.message_box = None
         self.refresh()
 
     def add_script(self, category, subcategory, script, module_name, main_view, script_module_instance=None, model=None):
+        if module_name in self.project_model.unique_names:
+            self.message_box = MessageBoxView("Naming Error", "<p style='font-size:12pt'>A module named <b>{0}</b> already exists.</p>".format(module_name))
+            self.message_box.show()
+            return
         if script_module_instance is not None:
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
@@ -46,11 +52,12 @@ class CommonController(object):
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         script_view.edit_btn.pressed.connect(partial(self.edit_script, script_view))
         script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, subcategory, script, module_name, main_view, script_view))
-        script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view))
+        script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view, module_name))
         script_view.refresh_module_name()
         if model is not None:
             script_view.model.__dict__ = model
         script_view.the_view.refresh_view()
+        self.project_model.unique_names.append(module_name)
 
     def move_script(self, script_view, offset_position):
         """
@@ -69,12 +76,12 @@ class CommonController(object):
         Args:
             script_view (auri.views.script_module_view.ScriptModuleView):
         """
-        self.edit_script_dialog = EditScriptView(script_view)
+        self.edit_script_dialog = EditScriptView(script_view, self.project_model)
         result = self.edit_script_dialog.exec_()
         if result == 1:
             self.refresh_project_model()
 
-    def remove_script(self, script_view):
+    def remove_script(self, script_view, module_name):
         """
 
         Args:
@@ -82,6 +89,7 @@ class CommonController(object):
         """
         self.main_view.scrollable_layout.removeWidget(script_view)
         script_view.deleteLater()
+        self.project_model.unique_names.remove(module_name)
 
     def set_window_title(self, title):
         self.bootstrap_view.setWindowTitle(title)

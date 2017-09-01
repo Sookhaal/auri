@@ -38,7 +38,6 @@ class ScriptSelectorView(QtWidgets.QDialog):
         QtWidgets.QDialog.accept(self)
 
     def cancel_pressed(self):
-        self.model.selected_script = None
         QtWidgets.QDialog.reject(self)
 
     def exec_(self, *args, **kwargs):
