@@ -40,7 +40,9 @@ class EditScriptView(QtWidgets.QDialog):
         self.setLayout(self.main_layout)
 
     def ok_pressed(self):
-        if self.new_name.text() not in self.project_model.unique_names or self.new_name.text() is self.script_view.module_name:
+        if self.new_name.text() not in self.project_model.unique_names or self.new_name.text() == self.script_view.module_name:
+            self.project_model.unique_names.remove(self.script_view.module_name)
+            self.project_model.unique_names.append(self.new_name.text())
             self.script_view.change_module_name(self.new_name.text())
             QtWidgets.QDialog.accept(self)
         else:

@@ -1,5 +1,8 @@
 import json
 import os
+
+import re
+
 from auri.vendor.Qt import QtWidgets, QtCore
 from collections import OrderedDict
 from functools import partial
@@ -37,6 +40,8 @@ class CommonController(object):
         self.refresh()
 
     def add_script(self, category, subcategory, script, module_name, main_view, script_module_instance=None, model=None):
+        if script_module_instance is not None:
+            module_name = "{0}__DUPLICATE".format(module_name)
         if module_name in self.project_model.unique_names:
             self.message_box = MessageBoxView("Naming Error", "<p style='font-size:12pt'>A module named <b>{0}</b> already exists.</p>".format(module_name))
             self.message_box.show()
@@ -45,6 +50,8 @@ class CommonController(object):
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
             script_view.model.__dict__ = script_module_instance.model.__dict__.copy()
+            script_view.model.module_name = module_name
+            script_view.refresh_module_name()
         else:
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(-1, script_view)

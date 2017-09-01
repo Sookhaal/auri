@@ -82,10 +82,15 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         script_layout.addWidget(the_view, 1, 0)
 
     def change_module_name(self, module_name=""):
+        """
+
+        :type project_model: auri.models.project_model.ProjectModel
+        """
         grp_title = "{0} - {1} - {2}".format(self.category, self.script, module_name)
         self.setTitle(grp_title)
         self.model.module_name = module_name
         self.module_name = module_name
+        self.refresh_module_name()
 
     def refresh_module_name(self):
         self.module_name = self.model.module_name
