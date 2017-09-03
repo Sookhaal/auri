@@ -42,7 +42,7 @@ class CommonController(object):
     def add_script(self, category, subcategory, script, module_name, main_view, script_module_instance=None, model=None):
         if script_module_instance is not None:
             module_name = "{0}__DUPLICATE".format(module_name)
-        if module_name in self.project_model.unique_names:
+        if module_name in self.main_model.unique_names:
             self.message_box = MessageBoxView("Naming Error", "<p style='font-size:12pt'>A module named <b>{0}</b> already exists.\nYou should rename that module.</p>".format(module_name))
             self.message_box.show()
         if script_module_instance is not None:
@@ -63,7 +63,7 @@ class CommonController(object):
         if model is not None:
             script_view.model.__dict__ = model
         script_view.the_view.refresh_view()
-        self.project_model.unique_names.append(module_name)
+        self.main_model.unique_names.append(module_name)
 
     def move_script(self, script_view, offset_position):
         """
@@ -82,7 +82,7 @@ class CommonController(object):
         Args:
             script_view (auri.views.script_module_view.ScriptModuleView):
         """
-        self.edit_script_dialog = EditScriptView(script_view, self.project_model)
+        self.edit_script_dialog = EditScriptView(script_view, self.project_model, self.main_model)
         result = self.edit_script_dialog.exec_()
         if result == 1:
             self.refresh_project_model()
@@ -95,7 +95,7 @@ class CommonController(object):
         """
         self.main_view.scrollable_layout.removeWidget(script_view)
         script_view.deleteLater()
-        self.project_model.unique_names.remove(module_name)
+        self.main_model.unique_names.remove(module_name)
 
     def set_window_title(self, title):
         self.bootstrap_view.setWindowTitle(title)
@@ -109,7 +109,7 @@ class CommonController(object):
 
         self.main_model.current_project = None
         self.project_model.scripts_to_execute = []
-        self.project_model.unique_names = []
+        self.main_model.unique_names = []
         self.set_window_title("Auri - New Project")
 
     def open_project(self, is_import=False):
@@ -138,7 +138,7 @@ class CommonController(object):
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
         self.main_model.scripts_to_execute = []
-        self.project_model.unique_names = []
+        self.main_model.unique_names = []
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
             assert isinstance(script_view, ScriptModuleView)
@@ -150,7 +150,7 @@ class CommonController(object):
             self.main_model.scripts_to_execute.append(script_view.the_ctrl)
 
     def save_project(self):
-        self.project_model.unique_names = []
+        # self.project_model.unique_names = []
         if self.main_model.current_project is None:
             self.save_project_as()
         else:
