@@ -4,15 +4,17 @@ from auri.views.message_box_view import MessageBoxView
 
 
 class EditScriptView(QtWidgets.QDialog):
-    def __init__(self, script_view, project_model):
+    def __init__(self, script_view, project_model, main_model):
         """
 
         Args:
             script_view (auri.views.script_module_view.ScriptModuleView):
             project_model (auri.models.project_model.ProjectModel):
+            main_model (auri.models.main_model.MainModel):
         """
         self.script_view = script_view
         self.project_model = project_model
+        self.main_model = main_model
         super(EditScriptView, self).__init__()
         self.setWindowTitle("Edit Script")
         self.setModal(1)
@@ -40,9 +42,9 @@ class EditScriptView(QtWidgets.QDialog):
         self.setLayout(self.main_layout)
 
     def ok_pressed(self):
-        if self.new_name.text() not in self.project_model.unique_names or self.new_name.text() == self.script_view.module_name:
-            self.project_model.unique_names.remove(self.script_view.module_name)
-            self.project_model.unique_names.append(self.new_name.text())
+        if self.new_name.text() not in self.main_model.unique_names or self.new_name.text() == self.script_view.module_name:
+            self.main_model.unique_names.remove(self.script_view.module_name)
+            self.main_model.unique_names.append(self.new_name.text())
             self.script_view.change_module_name(self.new_name.text())
             QtWidgets.QDialog.accept(self)
         else:
