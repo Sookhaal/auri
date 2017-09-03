@@ -43,9 +43,8 @@ class CommonController(object):
         if script_module_instance is not None:
             module_name = "{0}__DUPLICATE".format(module_name)
         if module_name in self.project_model.unique_names:
-            self.message_box = MessageBoxView("Naming Error", "<p style='font-size:12pt'>A module named <b>{0}</b> already exists.</p>".format(module_name))
+            self.message_box = MessageBoxView("Naming Error", "<p style='font-size:12pt'>A module named <b>{0}</b> already exists.\nYou should rename that module.</p>".format(module_name))
             self.message_box.show()
-            return
         if script_module_instance is not None:
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
             main_view.scrollable_layout.insertWidget(script_module_instance.get_index() + 1, script_view)
@@ -110,6 +109,7 @@ class CommonController(object):
 
         self.main_model.current_project = None
         self.project_model.scripts_to_execute = []
+        self.project_model.unique_names = []
         self.set_window_title("Auri - New Project")
 
     def open_project(self, is_import=False):
@@ -138,6 +138,7 @@ class CommonController(object):
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
         self.main_model.scripts_to_execute = []
+        self.project_model.unique_names = []
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
             assert isinstance(script_view, ScriptModuleView)
@@ -149,6 +150,7 @@ class CommonController(object):
             self.main_model.scripts_to_execute.append(script_view.the_ctrl)
 
     def save_project(self):
+        self.project_model.unique_names = []
         if self.main_model.current_project is None:
             self.save_project_as()
         else:
@@ -189,6 +191,7 @@ class CommonController(object):
             self.main_model.current_project = old_current_project
             self.set_window_title("Auri - {0}".format(os.path.basename(self.main_model.current_project)))
         self.project_model.__dict__ = old_project_model
+        self.main_view.add_btn.setDisabled(self.main_model.add_btn_disabled)
 
         # TODO: Extract that
         for index in self.project_model.scripts_in_order:
@@ -202,15 +205,18 @@ class CommonController(object):
     def refresh_categories(self):
         categories = get_categories()
         self.main_model.categories = categories
+        self.main_model.selected_category = None
         if self.category_combobox is not None:
             self.category_combobox.setCurrentIndex(0)
 
     def refresh_subcategories(self, new_category=None):
         subcategories = get_subcategories(new_category)
         self.main_model.subcategories = subcategories
+        self.main_model.selected_subcategory = None
         if self.subcategory_combobox is not None:
             self.subcategory_combobox.setCurrentIndex(0)
 
     def refresh_scripts(self, category=None, subcategory=None):
         scripts = get_scripts(category, subcategory)
         self.main_model.scripts = scripts
+        self.main_model.selected_script = None
