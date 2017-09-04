@@ -58,7 +58,7 @@ class CommonController(object):
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         script_view.edit_btn.pressed.connect(partial(self.edit_script, script_view))
         script_view.duplicate_btn.pressed.connect(partial(self.add_script, category, subcategory, script, module_name, main_view, script_view))
-        script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view, module_name))
+        script_view.delete_btn.pressed.connect(partial(self.remove_script, script_view))
         script_view.refresh_module_name()
         if model is not None:
             script_view.model.__dict__ = model
@@ -87,7 +87,7 @@ class CommonController(object):
         if result == 1:
             self.refresh_project_model()
 
-    def remove_script(self, script_view, module_name):
+    def remove_script(self, script_view):
         """
 
         Args:
@@ -95,7 +95,7 @@ class CommonController(object):
         """
         self.main_view.scrollable_layout.removeWidget(script_view)
         script_view.deleteLater()
-        self.main_model.unique_names.remove(module_name)
+        self.main_model.unique_names.remove(script_view.module_name)
 
     def set_window_title(self, title):
         self.bootstrap_view.setWindowTitle(title)
@@ -138,7 +138,6 @@ class CommonController(object):
     def refresh_project_model(self):
         self.project_model.scripts_in_order = {}
         self.main_model.scripts_to_execute = []
-        self.main_model.unique_names = []
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
             assert isinstance(script_view, ScriptModuleView)
