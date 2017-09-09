@@ -131,6 +131,9 @@ class AuriScriptView(QtWidgets.QWidget):
     def refresh_view(self):
         pass
 
+    def refresh_fold(self):
+        self.setVisible(not self.model.folded)
+
 
 class AuriScriptController:
     def __init__(self):
@@ -148,3 +151,4 @@ class AuriScriptController:
 class AuriScriptModel:
     def __init__(self):
         self.module_name = None
+        self.folded = False

@@ -38,6 +38,10 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         btns_layout = QtWidgets.QHBoxLayout()
         btns_size = QtCore.QSize(24, 24)
 
+        self.fold_btn = QtWidgets.QToolButton()
+        self.fold_btn.setText("FOLD")
+        self.fold_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+
         self.up_btn = QtWidgets.QToolButton()
         up_icon = QtGui.QIcon()
         up_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Up.png")))
@@ -72,6 +76,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
 
         # Add the buttons
+        btns_layout.addWidget(self.fold_btn)
         btns_layout.addWidget(self.up_btn)
         btns_layout.addWidget(self.down_btn)
         btns_layout.addWidget(self.edit_btn)
@@ -86,7 +91,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
         :type project_model: auri.models.project_model.ProjectModel
         """
-        grp_title = "{0} - {1} - {2}".format(self.category, self.script, module_name)
+        grp_title = self.get_module_name()
         self.setTitle(grp_title)
         self.model.module_name = module_name
         self.module_name = module_name
@@ -94,8 +99,11 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
     def refresh_module_name(self):
         self.module_name = self.model.module_name
-        grp_title = "{0} - {1} - {2}".format(self.category, self.script, self.module_name)
+        grp_title = self.get_module_name()
         self.setTitle(grp_title)
+
+    def get_module_name(self):
+        return "{0} - {1} - {2}".format(self.category, self.script, self.module_name)
 
     def get_index(self):
         return self.parent().layout().indexOf(self)
