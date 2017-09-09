@@ -18,6 +18,7 @@ class MainView(QtWidgets.QWidget):
         super(MainView, self).__init__()
         self.main_layout = QtWidgets.QVBoxLayout()
         self.scrollable_layout = QtWidgets.QVBoxLayout()
+        self.scrollable_layout.addStretch(1)
         self.category_combobox = QtWidgets.QComboBox()
         self.subcategory_combobox = QtWidgets.QComboBox()
         self.script_selector_dialog = ScriptSelectorView(self.model.scripts, self.model)

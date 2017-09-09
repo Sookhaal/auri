@@ -53,7 +53,8 @@ class CommonController(object):
             script_view.refresh_module_name()
         else:
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
-            main_view.scrollable_layout.insertWidget(-1, script_view)
+            main_view.scrollable_layout.insertWidget(main_view.scrollable_layout.count() - 1, script_view)
+        script_view.fold_btn.pressed.connect(partial(self.fold_script, script_view))
         script_view.up_btn.pressed.connect(partial(self.move_script, script_view, 1))
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         script_view.edit_btn.pressed.connect(partial(self.edit_script, script_view))
@@ -64,6 +65,15 @@ class CommonController(object):
             script_view.model.__dict__ = model
         script_view.the_view.refresh_view()
         self.main_model.unique_names.append(module_name)
+
+    def fold_script(self, script_view):
+        """
+
+        Args:
+            script_view (auri.views.script_module_view.ScriptModuleView):
+        """
+        script_view.the_view.setVisible(script_view.model.folded)
+        script_view.model.folded = not script_view.the_view.isVisible()
 
     def move_script(self, script_view, offset_position):
         """
