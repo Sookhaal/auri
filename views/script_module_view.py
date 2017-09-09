@@ -91,7 +91,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
         :type project_model: auri.models.project_model.ProjectModel
         """
-        grp_title = "{0} - {1} - {2}".format(self.category, self.script, module_name)
+        grp_title = self.get_module_name()
         self.setTitle(grp_title)
         self.model.module_name = module_name
         self.module_name = module_name
@@ -99,8 +99,11 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
     def refresh_module_name(self):
         self.module_name = self.model.module_name
-        grp_title = "{0} - {1} - {2}".format(self.category, self.script, self.module_name)
+        grp_title = self.get_module_name()
         self.setTitle(grp_title)
+
+    def get_module_name(self):
+        return "{0} - {1} - {2}".format(self.category, self.script, self.module_name)
 
     def get_index(self):
         return self.parent().layout().indexOf(self)
