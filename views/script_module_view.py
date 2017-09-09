@@ -38,6 +38,10 @@ class ScriptModuleView(QtWidgets.QGroupBox):
         btns_layout = QtWidgets.QHBoxLayout()
         btns_size = QtCore.QSize(24, 24)
 
+        self.fold_btn = QtWidgets.QToolButton()
+        self.fold_btn.setText("FOLD")
+        self.fold_btn.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Maximum)
+
         self.up_btn = QtWidgets.QToolButton()
         up_icon = QtGui.QIcon()
         up_icon.addPixmap(QtGui.QPixmap(get_auri_icon("Arrow_Up.png")))
@@ -72,6 +76,7 @@ class ScriptModuleView(QtWidgets.QGroupBox):
 
 
         # Add the buttons
+        btns_layout.addWidget(self.fold_btn)
         btns_layout.addWidget(self.up_btn)
         btns_layout.addWidget(self.down_btn)
         btns_layout.addWidget(self.edit_btn)

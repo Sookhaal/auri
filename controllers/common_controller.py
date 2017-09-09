@@ -53,7 +53,8 @@ class CommonController(object):
             script_view.refresh_module_name()
         else:
             script_view = ScriptModuleView(category, subcategory, script, module_name, self.main_model)
-            main_view.scrollable_layout.insertWidget(-1, script_view)
+            main_view.scrollable_layout.insertWidget(main_view.scrollable_layout.count() - 1, script_view)
+        script_view.fold_btn.pressed.connect(partial(self.fold_script, script_view))
         script_view.up_btn.pressed.connect(partial(self.move_script, script_view, 1))
         script_view.down_btn.pressed.connect(partial(self.move_script, script_view, -1))
         script_view.edit_btn.pressed.connect(partial(self.edit_script, script_view))
@@ -62,8 +63,18 @@ class CommonController(object):
         script_view.refresh_module_name()
         if model is not None:
             script_view.model.__dict__ = model
+        script_view.the_view.refresh_fold()
         script_view.the_view.refresh_view()
         self.main_model.unique_names.append(module_name)
+
+    def fold_script(self, script_view):
+        """
+
+        Args:
+            script_view (auri.views.script_module_view.ScriptModuleView):
+        """
+        script_view.the_view.setVisible(script_view.model.folded)
+        script_view.model.folded = not script_view.the_view.isVisible()
 
     def move_script(self, script_view, offset_position):
         """
@@ -106,7 +117,7 @@ class CommonController(object):
             child = self.main_view.scrollable_layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
-
+        self.main_view.scrollable_layout.addStretch(1)
         self.main_model.current_project = None
         self.project_model.scripts_to_execute = []
         self.main_model.unique_names = []
@@ -140,7 +151,8 @@ class CommonController(object):
         self.main_model.scripts_to_execute = []
         for widget_index in range(0, self.main_view.scrollable_layout.count()):
             script_view = self.main_view.scrollable_layout.itemAt(widget_index).widget()
-            assert isinstance(script_view, ScriptModuleView)
+            if not isinstance(script_view, ScriptModuleView):
+                continue
             self.project_model.scripts_in_order[script_view.get_index()] = {}
             self.project_model.scripts_in_order[script_view.get_index()]["Module Category"] = script_view.category
             self.project_model.scripts_in_order[script_view.get_index()]["Module SubCategory"] = script_view.subcategory
