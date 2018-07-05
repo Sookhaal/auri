@@ -45,6 +45,13 @@ import shutil
 
 __version__ = "1.1.0"
 
+
+# Hack to get working autocompletion!
+if False:
+    from PySide2 import QtWidgets, QtGui, QtCore
+    from PyQt5 import QtWidgets, QtGui, QtCore
+
+
 # Enable support for `from Qt import *`
 __all__ = []
 
