@@ -20,4 +20,14 @@ You can save & load the stack and its settings in order to reuse and share it wi
 [Maya 2017 Rigging Modules](https://github.com/Sookhaal/auri_maya_rigging_scripts)
 
 # Who is using it?
-Auri is used at [ArtFX](http://www.artfx.fr/en/) for the 5th year's graduation projects, mainly for the rigging process.
+Auri was used at [ArtFX](https://artfx.school/en/) for the 5th year's graduation projects (2018) for the rigging process.
+It was also used for Mercand, an Unreal Engine 4 video game.
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=8Ui8Q4Vd998" target="_blank"><img src="http://img.youtube.com/vi/8Ui8Q4Vd998/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=iJVfDInTNDM" target="_blank"><img src="http://img.youtube.com/vi/iJVfDInTNDM/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=quEDKeaSagE" target="_blank"><img src="http://img.youtube.com/vi/quEDKeaSagE/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=9b5nLb-1MNQ" target="_blank"><img src="http://img.youtube.com/vi/9b5nLb-1MNQ/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=0T6L_zUpbKk" target="_blank"><img src="http://img.youtube.com/vi/0T6L_zUpbKk/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Y4uKP-VJYIk" target="_blank"><img src="http://img.youtube.com/vi/Y4uKP-VJYIk/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=fkPSEHKgNxc" target="_blank"><img src="http://img.youtube.com/vi/fkPSEHKgNxc/0.jpg" width="430" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=029pM9BBW1c" target="_blank"><img src="http://img.youtube.com/vi/029pM9BBW1c/0.jpg" width="430" /></a>
