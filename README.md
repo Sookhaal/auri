@@ -6,6 +6,9 @@ Auri is confirmed to work on Modo, Maya, Houdini, Nuke and as a standalone appli
 
 ![](./docs/images/auri_presentation.png)
 
+# Installation
+[You can find installation instructions on the wiki.](https://github.com/Sookhaal/auri/wiki/Install)
+
 # How it works
 The `scripts` folder contains *categories* and *subcategories* (subfolders) which contain *modules* (python scripts).
 Auri lets you select a category, a subcategory and a corresponding script and *add* it to the list of scripts to execute.
