@@ -48,7 +48,11 @@ def get_categories():
 
 def get_subcategories(category=None):
     if category is None:
-        category = get_categories()[0]
+        categories = get_categories()
+        if len(categories) > 0:
+            category = get_categories()[0]
+        else:
+            return []
     category = os.path.join(get_scripts_directory(), category)
     subcategories = [subcat for subcat in os.listdir(category) if subcat != ".git" and os.path.isdir(os.path.join(category, subcat))]
     return subcategories
@@ -56,9 +60,9 @@ def get_subcategories(category=None):
 
 def get_scripts(category=None, subcategory=None):
     if category is None:
-        category = get_categories()[0]
+        return []
     if subcategory is None:
-        subcategory = get_subcategories(category)[0]
+        return []
     scripts = next(os.walk(os.path.join(get_scripts_directory(), category, subcategory)))[2]
     excludes = r"(__init__.py)|(.*.pyc)"
     includes = r".*.py$"
